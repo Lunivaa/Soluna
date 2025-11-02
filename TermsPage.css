@@ -1,0 +1,83 @@
+.terms-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  background: rgba(0,0,0,0.05);
+  padding: 10px;
+  overflow-y: auto;
+  z-index: 9999;
+}
+
+.terms-back-btn {
+  position: fixed;
+  top: 40px;
+  left: 80px;
+  background: #9565B8;
+  color: #E7EBDC;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(149, 101, 184, 0.25);
+  z-index: 10001;
+}
+
+.terms-back-btn:hover {
+  background-color: #814EA0;
+  box-shadow:
+    0 8px 20px rgba(129, 78, 160, 0.5),
+    0 0 60px rgba(129, 78, 160, 0.4),
+    0 0 100px rgba(129, 78, 160, 0.25),
+    0 0 150px rgba(129, 78, 160, 0.15);
+}
+
+.terms-card {
+  width: 92%;
+  max-width: 920px;
+  background: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(16px);
+  border-radius: 22px;
+  padding: 40px 48px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.14);
+  text-align: left;
+  box-sizing: border-box;
+
+  /* move the card a little upwards */
+  margin-top: 30px; /* reduced from 50px */
+}
+
+.terms-title {
+  font-size: 32px;
+  margin-bottom: 14px;
+  color: #1b1b1b;
+  text-align: center; /* center the heading */
+}
+
+.terms-intro {
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: #1b1b1b;
+  margin-bottom: 26px;
+  text-align: justify;
+}
+
+.terms-list {
+  list-style-type: disc;
+  padding-left: 24px;
+  line-height: 1.8;
+  color: #1b1b1b;
+}
+
+.terms-list li {
+  margin-bottom: 18px;
+}
+
+.highlight {
+  color: #9565B8;
+  font-weight: bold;
+}

@@ -1,0 +1,151 @@
+/* Overlay */
+.help-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  z-index: 9999;
+  overflow-y: auto;
+}
+
+/* Back Button */
+.help-back-btn {
+  position: fixed;
+  top: 28px;
+  left: 35px;
+  background: #9565B8;
+  color: #E7EBDC;
+  padding: 12px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 12px rgba(149, 101, 184, 0.25);
+  z-index: 10001;
+}
+
+/* Back Button Hover */
+.help-back-btn:hover {
+  background-color: #814EA0;
+  box-shadow:
+    0 8px 20px rgba(129, 78, 160, 0.5),
+    0 0 60px rgba(129, 78, 160, 0.4),
+    0 0 100px rgba(129, 78, 160, 0.25),
+    0 0 150px rgba(129, 78, 160, 0.15);
+  transform: none;
+}
+
+/* Main help card */
+.help-card {
+  width: 94%;
+  max-width: 980px;
+  padding: 45px 50px;
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.12);
+  text-align: center;
+  margin: 0;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Headings and intro */
+.help-card h1 {
+  font-size: 38px;
+  margin: 0 0 20px;
+  color: #1b1b1b;
+  gap: 10px;
+}
+
+/* Help Section Intro */
+.help-intro {
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: #1b1b1b;
+  margin: 0 0 30px;
+  text-align: justify;
+}
+
+/* FAQ grid */
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  margin-bottom: 35px;
+}
+
+/* FAQ boxes */
+.faq-box {
+  text-align: left;
+  background: rgba(255,255,255,0.36);
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255,255,255,0.4);
+}
+
+/* FAQ Hover */
+.faq-box:hover {
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.25);
+  box-shadow:
+    0 28px 65px rgba(0, 0, 0, 0.25),
+    0 0 50px rgba(149, 101, 184, 0.2),
+    0 0 80px rgba(149, 101, 184, 0.1);
+}
+
+.faq-box h2 {
+  font-size: 18px;
+  margin: 0 0 8px;
+  color: #1b1b1b;
+}
+
+.faq-box p {
+  font-size: 15px;
+  color: #1b1b1b;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+/* Contact Section */
+.contact-section {
+  text-align: center;
+  margin-top: 30px;
+}
+
+/* Contact Button */
+.contact-btn {
+  display: inline-block;
+  padding: 14px 28px;
+  background: #9565B8;
+  color: #E7EBDC;      
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(149, 101, 184, 0.25);
+  transition: all 0.3s ease;
+  border: none; 
+}
+
+/* Contact Button Hover */
+.contact-btn:hover {
+  background-color: #814EA0;  
+  color: #E7EBDC;              
+  box-shadow:
+    0 8px 20px rgba(129, 78, 160, 0.5),
+    0 0 60px rgba(129, 78, 160, 0.4),
+    0 0 100px rgba(129, 78, 160, 0.25),
+    0 0 150px rgba(129, 78, 160, 0.15);
+  transform: none;
+}
+
+/* Contact button Focus */
+.contact-btn:focus {
+  outline: none;
+}
