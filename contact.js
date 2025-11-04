@@ -1,17 +1,25 @@
 import express from "express";
 import nodemailer from "nodemailer";
+import { db } from "../db.js"; // Import your MySQL pool
 
 const router = express.Router();
 
-// POST route to send support email
 router.post("/", async (req, res) => {
   const { name, email, message } = req.body;
 
-  // Validate required field
-  if (!message) return res.status(400).json({ message: "Message is required." });
+  // Validate inputs
+  if (!name || !email || !message) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
 
   try {
-    // Configure Gmail transporter
+    // 1️⃣ Store the message in MySQL database
+    const [result] = await db.query(
+      "INSERT INTO messages (name, email, message) VALUES (?, ?, ?)",
+      [name, email, message]
+    );
+
+    // 2️⃣ Configure Gmail transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -20,20 +28,21 @@ router.post("/", async (req, res) => {
       },
     });
 
-    // Email details
+    // 3️⃣ Email content
     const mailOptions = {
-      from: `"${name || "Soluna User"}" <wellnesssoluna@gmail.com>`,
-      replyTo: email || "noreply@example.com",
+      from: `"${name}" <${email}>`,
       to: "wellnesssoluna@gmail.com",
-      subject: `Support Request from ${name || "Soluna User"}`,
-      text: message,
+      subject: `New Contact Message from ${name}`,
+      text: `You received a new message from ${name} (${email}):\n\n${message}`,
     };
 
+    // 4️⃣ Send the email
     await transporter.sendMail(mailOptions);
-    res.status(200).json({ message: "Message sent successfully!" });
+
+    res.status(200).json({ message: "Message stored and email sent successfully!" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to send message." });
+    console.error("Error in contact route:", error);
+    res.status(500).json({ message: "Failed to send or store message." });
   }
 });
 
