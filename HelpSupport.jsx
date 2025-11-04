@@ -9,6 +9,10 @@ export default function HelpSupport() {
     navigate(-1); // Go back to previous page exactly
   };
 
+  const handleContact = () => {
+    navigate("/contact"); // Navigate to ContactPage
+  };
+
   // Frequently asked questions
   const faqs = [
     {
@@ -57,15 +61,7 @@ export default function HelpSupport() {
         </div>
 
         <div className="contact-section">
-          <button
-            className="contact-btn"
-            onClick={() =>
-              window.open(
-                "https://mail.google.com/mail/?view=cm&fs=1&to=wellnesssoluna@gmail.com",
-                "_blank"
-              )
-            }
-          >
+          <button className="contact-btn" onClick={handleContact}>
             Get in Touch
           </button>
         </div>
