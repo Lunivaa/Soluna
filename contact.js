@@ -1,6 +1,6 @@
 import express from "express";
 import nodemailer from "nodemailer";
-import { db } from "../db.js"; // Import your MySQL pool
+import { db } from "../db.js"; 
 
 const router = express.Router();
 
@@ -13,13 +13,13 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    // 1️⃣ Store the message in MySQL database
+    // Store the message in MySQL database
     const [result] = await db.query(
       "INSERT INTO messages (name, email, message) VALUES (?, ?, ?)",
       [name, email, message]
     );
 
-    // 2️⃣ Configure Gmail transporter
+    // Configure Gmail transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
       },
     });
 
-    // 3️⃣ Email content
+    // Email content
     const mailOptions = {
       from: `"${name}" <${email}>`,
       to: "wellnesssoluna@gmail.com",
@@ -36,7 +36,7 @@ router.post("/", async (req, res) => {
       text: `You received a new message from ${name} (${email}):\n\n${message}`,
     };
 
-    // 4️⃣ Send the email
+    // Send the email
     await transporter.sendMail(mailOptions);
 
     res.status(200).json({ message: "Message stored and email sent successfully!" });
