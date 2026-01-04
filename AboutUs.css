@@ -1,0 +1,124 @@
+/* Overlay container for About section */
+.about-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  font-family: Arial, sans-serif;
+  padding: 0;
+  box-sizing: border-box;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+/* Back button styling */
+.back-btn {
+  position: fixed;               
+  top: 75px;
+  left: 75px;
+  background: #9565B8;
+  color: #E7EBDC;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 12px rgba(149, 101, 184, 0.25);
+  z-index: 10001;             
+}
+
+/* Back button hover effects */
+.back-btn:hover {
+  background-color: #814EA0;
+  box-shadow:
+    0 8px 20px rgba(129, 78, 160, 0.5),
+    0 0 60px rgba(129, 78, 160, 0.4),
+    0 0 100px rgba(129, 78, 160, 0.25),
+    0 0 150px rgba(129, 78, 160, 0.15);
+  transform: none;
+}
+
+/* Main About card */
+.about-card {
+  width: 92%;
+  max-width: 920px;
+  padding: 40px 48px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.26);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.14);
+  text-align: center;
+  box-sizing: border-box;
+  z-index: 10000;
+  margin: 0;                    
+}
+
+/* About card main heading */
+.about-card h1 {
+  font-size: 38px;
+  margin: 0 0 14px;
+  color: #1b1b1b;   
+}
+
+/* Highlight specific part of heading */
+.about-card h1 span {
+  color: #9565B8;  
+}
+
+/* Intro paragraph inside About card */
+.about-intro {
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: #1b1b1b;   
+  margin: 0 0 26px;
+  text-align: justify;
+}
+
+/* Grid layout for info boxes */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+/* Individual info boxes inside grid */
+.about-box {
+  text-align: left;
+  background: rgba(255,255,255,0.36);
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+/* Hover effect for info boxes */
+.about-box:hover {
+  transform: translateY(-1px) scale(1); 
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.35),
+    0 0 40px rgba(149, 101, 184, 0.2),
+    0 0 70px rgba(149, 101, 184, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+/* Info box headings */
+.about-box h2 { 
+  font-size: 20px; 
+  margin: 0 0 8px; 
+  color: #1b1b1b;  
+}
+
+/* Info box paragraph text */
+.about-box p  { 
+  font-size: 15px; 
+  color: #1b1b1b;  
+  line-height: 1.6; 
+  text-align: justify;
+}
