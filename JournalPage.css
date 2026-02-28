@@ -1,0 +1,1144 @@
+/* ---------- Base Layout ---------- */
+.journal-page {
+  width: 100vw;
+  min-width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.journal-container {
+  display: flex;
+  height: 89vh;
+  width: 100vw;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  color: #1b1b1b;
+  direction: ltr;
+  box-sizing: border-box;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  width: 380px;
+  min-width: 280px;
+  border-right: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: width 0.25s ease;
+  height: 90vh;
+  box-sizing: border-box;
+}
+
+.no-results {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #979797;
+  font-size: 15px;
+  padding: 5px 0;
+}
+
+.no-results span {
+  color: #979797;
+  font-weight: 400;
+}
+
+.no-results .open-book-icon {
+  font-size: 19px;
+  color: #979797;
+}
+
+@media (max-width: 850px) {
+  .sidebar {
+    width: 240px;
+    padding: 20px 16px;
+  }
+}
+@media (max-width: 700px) {
+  .sidebar {
+    display: none;
+  }
+}
+
+/* Logo */
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.logo-text {
+  font-weight: 700;
+  color: #1b1b1b;
+  font-size: 20px;
+}
+
+/* Nav */
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 18px;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  color: #444;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.nav-item:hover {
+  background: rgba(149, 101, 184, 0.12);
+  color: #9565B8;
+}
+.nav-item.active {
+  background: rgba(149, 101, 184, 0.28);
+  color: #814EA0;
+}
+
+/* Create button */
+.create-row {
+  margin-top: 0px;
+}
+.create-btn {
+  width: 100%;
+  text-align: center;
+  border-radius: 12px;
+  border: none;
+  padding: 14px;
+  background: #9565B8;
+  color: #E7EBDC;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 12px rgba(149, 101, 184, 0.25);
+}
+.create-btn:hover:not(:disabled) {
+  background: #814EA0;
+  box-shadow: 0 8px 20px rgba(129, 78, 160, 0.5), 0 0 60px rgba(129, 78, 160, 0.4);
+}
+.create-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Search */
+.search-area {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.01);
+}
+.search-area:focus-within {
+  border-color: #9565B8;
+  box-shadow: 0 0 8px rgba(149,101,184,0.4);
+}
+.search-icon {
+  color: #979797;
+  font-size: 18px;
+}
+.search-input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #1b1b1b;
+  background: transparent !important;
+  width: 100%;
+}
+.search-input::placeholder {
+  color: #979797;
+}
+
+/* Entries List */
+.previous-entries {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+.entries-list {
+  overflow-y: auto;
+  flex: 1 1 auto;
+  padding-right: 4px;
+  scroll-behavior: smooth;
+}
+}
+
+.entries-list::-webkit-scrollbar {
+  width: 8px;
+}
+.entries-list::-webkit-scrollbar-thumb {
+  background: rgba(139, 87, 176, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: 100px;
+}
+
+.entry-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+}
+.entry-row.selected {
+  background: rgba(149, 101, 184, 0.15);
+  border: 1px solid #9565B8;
+}
+.entry-left {
+  flex: 1;
+  min-width: 0;
+}
+.entry-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: #1b1b1b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.entry-sub {
+  font-size: 14px;
+  color: #1b1b1b;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.entry-date {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
+/* Entry actions */
+.entry-actions {
+  display: flex;
+  gap: 8px;
+}
+.entry-actions button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  color: #1b1b1b;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  font-size: 20px;
+}
+.entry-actions button:hover {
+  color: #1b1b1b;
+  background: rgba(149, 101, 184, 0.2);
+}
+
+/* Main Area */
+.main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 36px;
+  padding-left: 38px;
+  overflow: hidden;
+  direction: ltr;
+  box-sizing: border-box;
+  min-width: 0;  
+  margin-left: -18px;
+}
+
+/* Header */
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 36px;
+}
+.title-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1b1b1b;
+  background: transparent;
+  padding: 6px 0;
+  border-bottom: 2px solid #9565B8;
+}
+
+/* Toolbar Buttons */
+.toolbar-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 14px;
+  border-radius: 6px;
+  color: #1b1b1b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+}
+
+.toolbar-btn:hover {
+  color: #9565B8;
+  background: rgba(149, 101, 184, 0.2);
+}
+
+/* List Dropdown */
+.list-dropdown-wrapper {
+  position: relative;
+}
+.list-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: rgba(255, 252, 248, 0.98);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  min-width: 140px;
+  padding: 8px 0;
+  opacity: 0;
+  transform: translateY(-10px) scale(0.95);
+  animation: dropdownFadeIn 0.2s ease-out forwards;
+}
+
+@keyframes dropdownFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.list-dropdown button {
+  background: transparent;
+  border: none;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1b1b1b;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.list-dropdown button:hover {
+  background: rgba(149, 101, 184, 0.3);
+  color: #9565B8;
+}
+
+.list-dropdown button:active {
+  background: rgba(129, 78, 160, 0.5);
+  color: #E7EBDC;
+}
+
+/* Editor Section */
+.editor-section {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  direction: ltr;
+}
+
+/* Outer Card - Fixed to not interfere with dropdowns */
+.glass-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  overflow: visible !important; /* Allow dropdowns to show */
+  min-height: 540px;
+  max-height: 620px;
+  min-width: 100%; 
+  margin-top: 25px;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* INNER TEXT EDITOR – WIDER */
+.custom-editor[contenteditable] {
+  flex: 1;
+  width: 100% !important; /* 🔥 fill entire card */
+  height: 100%;
+  margin: 0;
+  padding: 22px;
+  border: none;
+  background: transparent;
+  color: #1b1b1b;
+  font-size: 16px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  overflow-x: hidden;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* Placeholder */
+.custom-editor:empty:before {
+  content: attr(data-placeholder);
+  color: #979797;
+  font-size: 16px;
+  position: absolute;
+  padding: 20px;
+  top: 0;
+  left: 0;
+}
+
+/* Normalize formatting */
+.custom-editor b,
+.custom-editor i,
+.custom-editor u,
+.custom-editor ul,
+.custom-editor ol,
+.custom-editor li,
+.custom-editor font,
+.custom-editor span,
+.custom-editor p {
+  font-size: inherit;
+  color: inherit;
+  background-color: inherit;
+  margin: 0;
+  padding: 0;
+  word-wrap: break-word;
+}
+
+.custom-editor ul,
+.custom-editor ol {
+  padding-left: 2em;
+  margin: 0.5em 0;
+}
+
+.custom-editor li {
+  line-height: 1.7;
+  margin-bottom: 0.5em;
+}
+
+.custom-editor p {
+  margin: 0.5em 0;
+  line-height: 1.7;
+}
+
+/* Scrollbar */
+.custom-editor::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-editor::-webkit-scrollbar-thumb {
+  background: #9565B8;
+  border-radius: 8px;
+}
+
+/* Footer */
+.footer-row {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 13px;
+  color: #1b1b1b;
+  margin-top: 18px;
+}
+
+/* Action buttons */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.download-print-wrapper {
+  display: flex;
+  gap: 8px;
+}
+
+.heart-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  color: #1b1b1b;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  font-size: 20px;
+}
+
+.heart-btn.fav svg {
+  fill: #9565B8;
+  color: #9565B8;
+}
+
+.download-btn,
+.print-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  color: #1b1b1b;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  font-size: 20px;
+}
+
+.download-btn:hover,
+.print-btn:hover,
+.heart-btn:hover {
+  color: #1b1b1b;
+  background: rgba(149, 101, 184, 0.2);
+}
+
+.download-btn:disabled,
+.print-btn:disabled,
+.heart-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.download-btn:disabled:hover,
+.print-btn:disabled:hover,
+.heart-btn:disabled:hover {
+  background: transparent;
+  color: #1b1b1b;
+}
+
+/* Prevent overflow */
+.navbar,
+.footer {
+  width: 100vw;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* ReactQuill - Clean toolbar without card background */
+.ql-toolbar {
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25) !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  position: relative !important;
+  z-index: 100 !important;
+  padding: 12px 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+}
+
+/* Individual toolbar item spacing - targeting each tool separately */
+.ql-toolbar .ql-formats {
+  margin-right: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Individual toolbar item spacing - using broader selectors */
+.ql-toolbar .ql-formats {
+  margin-right: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Reset all individual button/picker margins first */
+.ql-snow .ql-toolbar button,
+.ql-snow .ql-toolbar .ql-picker {
+  margin: 0 !important;
+  width: 36px !important;
+  height: 36px !important;
+}
+
+/* FORCE TOOLBAR SPACING - HIGHEST PRIORITY */
+.ql-snow .ql-toolbar .ql-formats {
+  gap: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Force individual spacing with maximum specificity */
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(1) { margin-right: 36px !important; } /* Bold/Italic/Underline → Text color (+10px from 26px) */
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(2) { margin-right: 46px !important; } /* Text color/Highlighter → Lists (+10px from 36px) */
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(3) { margin-right: 39px !important; } /* Lists → Alignment (+10px from 29px) */
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(4) { margin-right: 39px !important; } /* Alignment → TX (+10px from 29px) */
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(5) { margin-right: 0 !important; } /* TX (last) */
+
+/* Internal group spacing */
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(1) > * { margin-right: 21px !important; } /* B→I, I→U (+10px from 11px) */
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(1) > *:last-child { margin-right: 0 !important; }
+
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(2) > *:first-child { margin-right: 26px !important; } /* Text color → Highlighter (+10px from 16px) */
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(2) > *:last-child { margin-right: 0 !important; }
+
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(3) > *:first-child { margin-right: 36px !important; } /* Numbered → Bullet (+10px from 26px) */
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(3) > *:last-child { margin-right: 0 !important; }
+
+.ql-toolbar .ql-formats:last-child {
+  margin-right: 0 !important;
+}
+
+/* Space individual items within groups and make them bigger */
+.ql-toolbar button,
+.ql-toolbar .ql-picker {
+  margin: 0 !important; /* Reset margins - we'll set specific spacing below */
+  width: 36px !important;
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.ql-toolbar button:first-child,
+.ql-toolbar .ql-picker:first-child {
+  margin-left: 0 !important;
+}
+
+.ql-toolbar button:last-child,
+.ql-toolbar .ql-picker:last-child {
+  margin-right: 0 !important;
+}
+
+/* Make all SVG icons bigger */
+.ql-toolbar button svg,
+.ql-toolbar .ql-picker-label svg {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+/* Make alignment icon bigger than other icons - more specific selectors */
+.ql-toolbar .ql-align .ql-picker-label svg,
+.ql-snow .ql-toolbar .ql-align .ql-picker-label svg,
+.ql-toolbar.ql-snow .ql-align .ql-picker-label svg {
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+}
+
+/* Ensure picker labels are properly sized */
+.ql-toolbar .ql-picker-label {
+  width: 36px !important;
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Fix color picker dropdown styling */
+.ql-toolbar .ql-color .ql-picker-options,
+.ql-toolbar .ql-background .ql-picker-options {
+  background: rgba(255, 252, 248, 0.98) !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  padding: 8px !important;
+}
+
+/* Remove hover effects on color swatches */
+.ql-toolbar .ql-color .ql-picker-item,
+.ql-toolbar .ql-background .ql-picker-item {
+  border: none !important;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1) !important;
+  cursor: pointer !important;
+  width: 10px !important;
+  height: 16px !important;
+  margin: 1px !important;
+}
+
+/* Prevent color swatches from turning white on hover */
+.ql-toolbar .ql-color .ql-picker-item:hover,
+.ql-toolbar .ql-background .ql-picker-item:hover {
+  background: inherit !important;
+  box-shadow: inset 0 0 0 2px #333 !important;
+  transform: scale(1.1) !important;
+}
+
+/* Remove box border and grayish color from expanded picker */
+.ql-toolbar .ql-picker.ql-expanded .ql-picker-label {
+  background: transparent !important;
+  border: none !important;
+  color: inherit !important;
+}
+
+/* Keep normal icon color when picker is expanded */
+.ql-toolbar .ql-picker.ql-expanded .ql-picker-label svg {
+  fill: currentColor !important;
+  opacity: 1 !important;
+}
+
+
+
+/* Critical: Ensure all toolbar elements are clickable */
+.ql-toolbar * {
+  pointer-events: auto !important;
+}
+
+/* Ensure dropdowns can appear above other elements */
+.ql-toolbar .ql-picker {
+  position: relative !important;
+}
+
+/* Fix dropdown positioning and visibility */
+.ql-toolbar .ql-picker-options {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  z-index: 1001 !important;
+  background: rgba(255, 252, 248, 0.98) !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  max-height: 200px !important;
+  overflow-y: auto !important;
+  display: none !important;
+  padding: 8px !important; /* Equal padding for all dropdowns */
+  margin: 4px 0 !important; /* Equal margin for all dropdowns */
+}
+
+/* Show dropdown when picker is expanded */
+.ql-toolbar .ql-picker.ql-expanded .ql-picker-options {
+  display: block !important;
+}
+
+/* Make sure picker labels are clickable and visible */
+.ql-toolbar .ql-picker-label {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  padding: 0 4px !important;
+}
+
+/* Fix alignment picker label to show icons properly */
+.ql-toolbar .ql-align .ql-picker-label {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+.ql-toolbar .ql-align .ql-picker-label svg {
+  width: 16px !important;
+  height: 16px !important;
+  display: block !important;
+}
+
+/* Ensure picker items are clickable */
+.ql-toolbar .ql-picker-item {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  padding: 5px 10px !important;
+  display: block !important;
+}
+
+.ql-toolbar .ql-picker-item:hover {
+  background: rgba(149, 101, 184, 0.1) !important;
+}
+
+
+
+/* Standardized dropdown sizing for all pickers */
+.ql-toolbar .ql-color .ql-picker-options,
+.ql-toolbar .ql-background .ql-picker-options {
+  width: 150px !important;
+  /* Padding and margin inherited from base .ql-picker-options */
+}
+
+.ql-toolbar .ql-align .ql-picker-options {
+  /* Remove fixed width - let it size naturally */
+  width: auto !important;
+  min-width: 40px !important;
+  /* Padding and margin inherited from base .ql-picker-options */
+}
+
+.ql-toolbar .ql-size .ql-picker-options {
+  width: 100px !important;
+  /* Padding and margin inherited from base .ql-picker-options */
+}
+
+
+
+.ql-container {
+  border: none !important;
+  font-size: 16px !important;
+  flex: 1 !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.ql-editor {
+  padding: 20px !important;
+  min-height: 400px !important;
+  color: #1b1b1b !important;
+}
+
+
+
+/* List styles */
+.ql-editor ol, .ql-editor ul {
+  margin: 1em 0 !important;
+  padding-left: 2em !important;
+}
+
+.ql-editor li {
+  margin: 0.3em 0 !important;
+  line-height: 1.7 !important;
+}
+
+/* Text alignment */
+.ql-editor .ql-align-center { text-align: center !important; }
+.ql-editor .ql-align-right { text-align: right !important; }
+.ql-editor .ql-align-justify { text-align: justify !important; }
+
+
+
+.ql-editor.ql-blank::before {
+  color: #979797 !important;
+  font-style: normal !important;
+  left: 20px !important;
+}
+
+
+
+/* Custom scrollbar for editor */
+.ql-editor::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ql-editor::-webkit-scrollbar-thumb {
+  background: rgba(149, 101, 184, 0.6);
+  border-radius: 4px;
+}
+
+.ql-editor::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Standardized alignment dropdown - removed duplicate, using natural sizing */
+.ql-toolbar .ql-align .ql-picker-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 8px 12px !important; /* Increased padding for more space */
+  margin: 4px 0 !important; /* Increased margin for more space between items */
+}
+
+.ql-toolbar .ql-align .ql-picker-item svg {
+  /* Make alignment icons bigger */
+  width: 28px !important;
+  height: 28px !important;
+}
+
+/* Loading state */
+.journal-container.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(149, 101, 184, 0.3);
+  border-top: 3px solid #9565B8;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 100;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Responsive improvements */
+@media (max-width: 1200px) {
+  .ql-toolbar .ql-formats {
+    margin-right: 25px !important; /* Back to uniform spacing */
+  }
+  
+  .ql-toolbar button {
+    padding: 6px !important; /* Smaller buttons on medium screens */
+    margin: 2px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+  }
+  
+  .ql-toolbar .ql-picker {
+    min-height: 28px !important;
+    padding: 3px 6px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .ql-toolbar {
+    padding: 12px 16px !important; /* Adjusted padding for mobile */
+  }
+  
+  .ql-toolbar .ql-formats {
+    margin-right: 15px !important; /* Mobile spacing */
+  }
+  
+  .ql-toolbar button {
+    padding: 5px !important; /* Smaller buttons on mobile */
+    margin: 1px !important;
+    min-width: 26px !important;
+    min-height: 26px !important;
+  }
+  
+  .ql-toolbar .ql-picker {
+    min-height: 26px !important;
+    padding: 2px 4px !important;
+  }
+  
+  .ql-editor {
+    padding: 15px !important;
+    min-height: 300px !important;
+  }
+}
+
+/* FINAL OVERRIDE - TOOLBAR SPACING WITH MAXIMUM PRIORITY */
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(1) { 
+  margin-right: 36px !important; 
+} 
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(2) { 
+  margin-right: 46px !important; 
+} 
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(3) { 
+  margin-right: 39px !important; 
+} 
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(4) { 
+  margin-right: 39px !important; 
+} 
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(5) { 
+  margin-right: 0 !important; 
+}
+
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(1) > * { 
+  margin-right: 21px !important; 
+}
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(1) > *:last-child { 
+  margin-right: 0 !important; 
+}
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(2) > *:first-child { 
+  margin-right: 26px !important; 
+}
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(2) > *:last-child { 
+  margin-right: 0 !important; 
+}
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(3) > *:first-child { 
+  margin-right: 36px !important; 
+}
+.ql-snow .ql-toolbar .ql-formats:nth-of-type(3) > *:last-child { 
+  margin-right: 0 !important; 
+}
+/* FORCE ALIGNMENT DROPDOWN ICONS TO BE BIGGER */
+.ql-snow .ql-toolbar .ql-align .ql-picker-options .ql-picker-item svg {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+}
+
+.ql-snow .ql-toolbar .ql-align .ql-picker-item svg {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+}
+/* Custom Delete Modal - Soluna Brand Glassmorphic Design */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(3px);
+  animation: modalOverlayFadeIn 0.3s ease-out;
+}
+
+@keyframes modalOverlayFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(3px);
+  }
+}
+
+.modal-content {
+  background: rgba(255, 252, 248, 0.98);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 16px;
+  padding: 0;
+  width: 320px;
+  height: 200px;
+  max-width: 90vw;
+  box-shadow: 0 8px 24px rgba(149, 101, 184, 0.15);
+  animation: modalSlideIn 0.08s ease-out;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-header {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid rgba(149, 101, 184, 0.2);
+  flex-shrink: 0;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #1b1b1b;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.modal-body {
+  padding: 16px 20px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.modal-body p {
+  margin: 0;
+  color: #1b1b1b;
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+.modal-actions {
+  padding: 12px 20px 16px;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.modal-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-btn.cancel-btn {
+  background: rgba(255, 255, 255, 0.8);
+  color: #1b1b1b;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modal-btn.cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.95);
+  color: #1b1b1b;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 1);
+}
+
+.modal-btn.delete-btn {
+  background: #9565B8;
+  color: #E7EBDC;
+  border: 1px solid rgba(149, 101, 184, 0.3);
+  box-shadow: 0 6px 12px rgba(149, 101, 184, 0.25);
+}
+
+.modal-btn.delete-btn:hover {
+  background: #814EA0;
+  box-shadow: 0 8px 20px rgba(129, 78, 160, 0.5), 0 0 60px rgba(129, 78, 160, 0.4);
+  border-color: rgba(129, 78, 160, 0.5);
+}
+
+.modal-btn:active {
+  transform: scale(0.98);
+}
+
+.modal-btn.cancel-btn:active {
+  background: rgba(255, 255, 255, 1);
+}
+
+.modal-btn.delete-btn:active {
+  background: #6b3d8f;
+}
+
+/* Add subtle glow effect */
+.modal-btn.delete-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(129, 78, 160, 0.1), rgba(129, 78, 160, 0.2));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 8px;
+}
+
+.modal-btn.delete-btn:hover::before {
+  opacity: 1;
+}
