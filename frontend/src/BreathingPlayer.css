@@ -1,0 +1,342 @@
+.bp-loading {
+  text-align: center;
+  padding: 60px;
+  font-size: 18px;
+  color: #666;
+}
+
+/* No vertical scroll on this page */
+.libraries-page.bp-no-scroll {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.libraries-page.bp-no-scroll .libraries-container {
+  overflow: hidden;
+}
+
+/* ── Player card — matches Libraries card style exactly ── */
+.bp-card {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 32px 36px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  box-sizing: border-box;
+}
+
+/* ── Card header ── */
+.bp-card-header {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.bp-thumbnail {
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.bp-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.bp-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1b1b1b;
+  margin: 0 0 6px;
+  line-height: 1.3;
+}
+
+.bp-desc {
+  font-size: 14px;
+  color: #1b1b1b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.bp-save-btn {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: none;
+  box-shadow: none;
+  outline: none;
+}
+
+.bp-save-btn svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: #666;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  display: block;
+}
+
+.bp-save-btn:hover svg {
+  stroke: #9565B8;
+}
+
+.bp-save-btn.saved svg {
+  fill: #9565B8;
+  stroke: #9565B8;
+}
+
+/* ── Breathing circle ── */
+.bp-circle-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px 0;
+}
+
+.bp-circle {
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  background: rgba(149, 101, 184, 0.08);
+  border: 2px solid rgba(149, 101, 184, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 0 0 12px rgba(149, 101, 184, 0.05), 0 0 0 24px rgba(149, 101, 184, 0.025);
+}
+
+.bp-circle.inhale {
+  transform: scale(1.2);
+  transition: transform var(--inhale-duration, 4s) ease-in-out, border-color 0.4s ease;
+  border-color: rgba(149, 101, 184, 0.6);
+}
+
+.bp-circle.hold {
+  transform: scale(1.2);
+  border-color: rgba(149, 101, 184, 0.6);
+}
+
+.bp-circle.exhale {
+  transform: scale(1);
+  transition: transform var(--exhale-duration, 4s) ease-in-out, border-color 0.4s ease;
+  border-color: rgba(149, 101, 184, 0.3);
+}
+
+.bp-circle.rest {
+  transform: scale(1);
+  border-color: rgba(149, 101, 184, 0.2);
+}
+
+.bp-circle.complete {
+  border-color: rgba(149, 101, 184, 0.7);
+  background: rgba(149, 101, 184, 0.12);
+}
+
+.bp-circle-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.bp-phase-text {
+  font-size: 22px;
+  font-weight: 700;
+  color: #9565B8;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.bp-cycle-label {
+  font-size: 12px;
+  color: #9565B8;
+  opacity: 0.7;
+  font-weight: 500;
+}
+
+/* ── Stats row ── */
+.bp-stats-row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 14px 0;
+}
+
+.bp-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0 10px;
+  border-right: 1px solid rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+.bp-stat:last-child {
+  border-right: none;
+}
+
+.bp-stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #1b1b1b;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.bp-stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1b1b1b;
+}
+
+.bp-stat.active .bp-stat-label {
+  color: #1b1b1b;
+}
+
+.bp-stat.active .bp-stat-value {
+  color: #1b1b1b;
+}
+
+/* ── Controls ── */
+.bp-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.bp-btn {
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+/* Large play/pause — matches MeditationPlayer play-pause-btn */
+.bp-btn-play {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #9565B8 0%, #814EA0 100%);
+  color: #E7EBDC;
+  box-shadow: 0 6px 20px rgba(149, 101, 184, 0.35);
+}
+
+.bp-btn-play svg {
+  fill: #E7EBDC;
+  stroke: none;
+  width: 32px;
+  height: 32px;
+}
+
+.bp-btn-play:hover {
+  background: linear-gradient(135deg, #9565B8 0%, #814EA0 100%);
+  box-shadow: 0 0 0 8px rgba(149, 101, 184, 0.2);
+}
+
+/* Secondary: reset + sound — matches MeditationPlayer skip-btn */
+.bp-btn-secondary {
+  width: 58px;
+  height: 58px;
+  background: rgba(255, 255, 255, 0.25);
+  color: #9565B8;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.bp-btn-secondary svg {
+  width: 26px;
+  height: 26px;
+  stroke: #9565B8;
+  fill: none;
+  stroke-width: 2;
+}
+
+.bp-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.4);
+  color: #814EA0;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.bp-btn-secondary.muted {
+  color: #9565B8;
+}
+
+.bp-btn-secondary.muted svg {
+  stroke: #9565B8;
+}
+
+.bp-btn-secondary:disabled,
+.bp-btn-secondary.disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .bp-card {
+    padding: 20px 16px 28px;
+    gap: 22px;
+  }
+
+  .bp-circle {
+    width: 150px;
+    height: 150px;
+  }
+
+  .bp-phase-text {
+    font-size: 16px;
+  }
+
+  .bp-btn-play {
+    width: 66px;
+    height: 66px;
+  }
+
+  .bp-btn-play svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .bp-btn-secondary {
+    width: 44px;
+    height: 44px;
+  }
+}
