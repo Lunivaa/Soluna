@@ -1,42 +1,56 @@
 import express from "express";
 import nodemailer from "nodemailer";
-import { db } from "../db.js"; // Import your MySQL pool
+import { db } from "../db.js";
+import { emailTemplate } from "../utils/emailTemplate.js";
 
 const router = express.Router();
 
 router.post("/", async (req, res) => {
   const { name, email, message } = req.body;
 
-  // Validate inputs
   if (!name || !email || !message) {
     return res.status(400).json({ message: "All fields are required." });
   }
 
   try {
-    // Store the message in MySQL database
-    const [result] = await db.query(
+    await db.query(
       "INSERT INTO messages (name, email, message) VALUES (?, ?, ?)",
       [name, email, message]
     );
 
-    // Configure Gmail transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "wellnesssoluna@gmail.com",
-        pass: "bdauhaictaqgfsvx", 
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
       },
     });
 
-    // Email content
     const mailOptions = {
-      from: `"${name}" <${email}>`,
-      to: "wellnesssoluna@gmail.com",
+      from: `"Soluna Support" <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_USER,
       subject: `New Contact Message from ${name}`,
-      text: `You received a new message from ${name} (${email}):\n\n${message}`,
+      replyTo: email,
+      html: emailTemplate({
+        title: 'New Contact Message',
+        preheader: `${name} sent a message via the Soluna contact form.`,
+        bodyHtml: `
+          <p style="margin:0 0 16px;font-size:16px;color:#1b1b1b;font-weight:600;">New message received</p>
+          <div style="background:#f9f5ff;border-left:4px solid #9565B8;border-radius:0 8px 8px 0;padding:16px 20px;margin:0 0 20px;">
+            <p style="margin:0 0 6px;font-size:13px;font-weight:700;color:#9565B8;text-transform:uppercase;letter-spacing:0.5px;">From</p>
+            <p style="margin:0;font-size:15px;color:#1b1b1b;font-weight:600;">${name}</p>
+            <p style="margin:4px 0 0;font-size:14px;color:#666;">
+              <a href="mailto:${email}" style="color:#9565B8;text-decoration:none;">${email}</a>
+            </p>
+          </div>
+          <div style="background:#f9f5ff;border-left:4px solid #9565B8;border-radius:0 8px 8px 0;padding:16px 20px;">
+            <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:#9565B8;text-transform:uppercase;letter-spacing:0.5px;">Message</p>
+            <p style="margin:0;font-size:15px;color:#444;line-height:1.7;">${message.replace(/\n/g, '<br/>')}</p>
+          </div>
+        `
+      })
     };
 
-    // Send the email
     await transporter.sendMail(mailOptions);
 
     res.status(200).json({ message: "Message stored and email sent successfully!" });
