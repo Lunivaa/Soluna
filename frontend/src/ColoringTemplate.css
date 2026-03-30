@@ -1,0 +1,645 @@
+/* Coloring Template Page */
+.coloring-template-page {
+  width: 100%;
+  min-width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  background: linear-gradient(135deg, #b7c6fa, #b5d1fc, #c1a9fb, #e1bdff);
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+.coloring-container {
+  padding: 28px 36px;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: calc(100vh - 89px);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+/* Header */
+.coloring-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+/* BACK BUTTON - Exactly like Meditation Player */
+.meditation-style-back-btn {
+  background: #9565B8;
+  color: #E7EBDC;
+  padding: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(149, 101, 184, 0.25);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.meditation-style-back-btn:hover {
+  background: #814EA0;
+  border-color: transparent;
+  outline: none;
+  box-shadow: 
+    0 8px 20px rgba(129, 78, 160, 0.5),
+    0 0 60px rgba(129, 78, 160, 0.4),
+    0 0 100px rgba(129, 78, 160, 0.25),
+    0 0 150px rgba(129, 78, 160, 0.15);
+}
+
+.meditation-style-back-btn:focus,
+.meditation-style-back-btn:focus-visible {
+  outline: none;
+}
+
+.coloring-header-content h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1b1b1b;
+  margin: 0 0 8px 0;
+}
+
+.coloring-header-content p {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+}
+
+/* Controls */
+.coloring-controls {
+  display: grid;
+  grid-template-columns: 150px 250px 300px 120px;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.color-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.color-section label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1b1b1b;
+  white-space: nowrap;
+}
+
+.color-picker-input {
+  width: 35px;
+  height: 35px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 6px;
+  cursor: pointer;
+  background: none;
+  padding: 0;
+}
+
+.color-picker-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+}
+
+.color-picker-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
+
+.brush-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brush-controls label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1b1b1b;
+  white-space: nowrap;
+  width: 140px;
+}
+
+.size-slider {
+  width: 100px;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.size-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #9565B8;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(149, 101, 184, 0.4);
+}
+
+.size-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #9565B8;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 8px rgba(149, 101, 184, 0.4);
+}
+
+.coloring-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.navigation-controls {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* Use the same button styling as other pages */
+.coloring-actions .libraries-back-btn,
+.navigation-controls .libraries-back-btn {
+  background: #9565B8;
+  color: #E7EBDC;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 6px 12px rgba(149, 101, 184, 0.25);
+  flex-shrink: 0;
+}
+
+.coloring-actions .libraries-back-btn {
+  width: auto;
+  padding: 0 16px;
+  gap: 8px;
+}
+
+.coloring-actions .libraries-back-btn:hover,
+.navigation-controls .libraries-back-btn:hover {
+  background: #814EA0 !important;
+  border: none !important;
+  border-color: transparent !important;
+  outline: none !important;
+  box-shadow: 
+    0 8px 20px rgba(129, 78, 160, 0.5),
+    0 0 60px rgba(129, 78, 160, 0.4),
+    0 0 100px rgba(129, 78, 160, 0.25),
+    0 0 150px rgba(129, 78, 160, 0.15) !important;
+}
+
+/* Canvas Area */
+.coloring-canvas-area {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #FFFFFF;
+  border-radius: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  width: 800px;
+  height: 500px;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.template-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.template-background-image {
+  width: 400px;
+  height: 400px;
+  object-fit: contain;
+  opacity: 0.8;
+  filter: grayscale(100%) contrast(200%) brightness(0.3);
+}
+
+/* Error Message */
+.error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  text-align: center;
+}
+
+.error-message h2 {
+  color: #1b1b1b;
+  margin-bottom: 20px;
+}
+
+.error-message button {
+  padding: 12px 24px;
+  background: #9565B8;
+  color: #E7EBDC;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.error-message button:hover {
+  background: #814EA0;
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+  .coloring-controls {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    text-align: center;
+  }
+  
+  .coloring-canvas-area {
+    width: 100%;
+    max-width: 700px;
+    height: 400px;
+  }
+  
+  .template-background-image {
+    width: 320px;
+    height: 320px;
+  }
+}
+
+@media (max-width: 768px) {
+  .coloring-container {
+    padding: 20px 16px;
+  }
+  
+  .coloring-canvas-area {
+    width: 100%;
+    max-width: 600px;
+    height: 350px;
+  }
+  
+  .template-background-image {
+    width: 280px;
+    height: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .coloring-header-content h1 {
+    font-size: 18px;
+  }
+  
+  .coloring-header-content p {
+    font-size: 14px;
+  }
+  
+  .coloring-canvas-area {
+    width: 100%;
+    max-width: 400px;
+    height: 300px;
+  }
+  
+  .template-background-image {
+    width: 250px;
+    height: 250px;
+  }
+  
+  .color-picker-input {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .coloring-actions .libraries-back-btn {
+    height: 40px;
+    font-size: 14px;
+    padding: 0 12px;
+  }
+  
+  .navigation-controls .libraries-back-btn {
+    width: 40px;
+    height: 40px;
+  }
+}
+/* Simple Drawing Controls - Same as Creative Canvas */
+.simple-drawing-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(15px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.simple-color-picker {
+  width: 40px;
+  height: 25px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: none;
+  outline: none;
+}
+
+.simple-color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+}
+
+.simple-color-picker::-webkit-color-swatch {
+  border: none;
+  border-radius: 6px;
+}
+
+.simple-drawing-btn {
+  padding: 10px 24px;
+  border: none;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(15px);
+  color: #666;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: none;
+  outline: none;
+  min-width: 44px;
+  height: 44px;
+}
+
+.simple-drawing-btn:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.simple-drawing-btn.active {
+  background: #9565B8;
+  color: white;
+  box-shadow: none;
+}
+
+.simple-drawing-btn svg {
+  font-size: 16px;
+}
+
+.simple-drawing-btn.clear-text-btn,
+.simple-drawing-btn.save-text-btn {
+  padding: 10px 16px;
+  font-size: 14px;
+  min-width: auto;
+  width: auto;
+}
+
+.canvas-favorite-btn:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.canvas-favorite-btn .filled-heart {
+  color: #9565B8 !important;
+  fill: #9565B8 !important;
+}
+
+.brush-size-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.simple-size-slider {
+  width: 100px;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.6);
+  outline: none;
+  cursor: pointer;
+}
+
+.simple-size-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #9565B8;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.simple-size-badge {
+  font-size: 12px;
+  color: #666;
+  font-weight: 600;
+  min-width: 35px;
+  text-align: center;
+}
+
+/* Modal Styles - Same as Creative Canvas */
+.canvas-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(3px);
+  animation: canvasModalOverlayFadeIn 0.3s ease-out;
+}
+
+@keyframes canvasModalOverlayFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(3px);
+  }
+}
+
+.canvas-modal-content {
+  background: rgba(255, 252, 248, 0.98);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 16px;
+  padding: 0;
+  width: 400px;
+  height: 280px;
+  max-width: 90vw;
+  box-shadow: 0 8px 24px rgba(149, 101, 184, 0.15);
+  animation: canvasModalSlideIn 0.08s ease-out;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes canvasModalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.canvas-modal-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid rgba(149, 101, 184, 0.2);
+  flex-shrink: 0;
+}
+
+.canvas-modal-header h3 {
+  margin: 0;
+  color: #1b1b1b;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.canvas-modal-body {
+  padding: 20px 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.canvas-modal-body p {
+  margin: 0;
+  color: #1b1b1b;
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+.canvas-artwork-name-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid rgba(149, 101, 184, 0.3);
+  border-radius: 10px;
+  font-size: 15px;
+  background: rgba(255, 255, 255, 0.8);
+  outline: none;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+  color: #1b1b1b;
+}
+
+.canvas-artwork-name-input::placeholder {
+  color: #999;
+}
+
+.canvas-artwork-name-input:focus {
+  border-color: #9565B8;
+}
+
+.canvas-modal-actions {
+  padding: 16px 24px 20px;
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.canvas-modal-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 90px;
+  position: relative;
+  overflow: hidden;
+}
+
+.canvas-modal-btn.canvas-cancel-btn {
+  background: rgba(149, 101, 184, 0.15);
+  color: #814EA0;
+  border: 1px solid rgba(149, 101, 184, 0.35);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 8px rgba(149, 101, 184, 0.1);
+}
+
+.canvas-modal-btn.canvas-cancel-btn:hover {
+  background: rgba(149, 101, 184, 0.25);
+  color: #6b3d8f;
+  box-shadow: 0 6px 16px rgba(149, 101, 184, 0.2);
+  border-color: rgba(149, 101, 184, 0.55);
+}
+
+.canvas-modal-btn.canvas-save-btn {
+  background: #9565B8;
+  color: white;
+  border: 1px solid #9565B8;
+  box-shadow: 0 4px 8px rgba(149, 101, 184, 0.3);
+}
+
+.canvas-modal-btn.canvas-save-btn:hover {
+  background: #8a5aa7;
+  border-color: #8a5aa7;
+  box-shadow: 0 6px 16px rgba(149, 101, 184, 0.4);
+}
