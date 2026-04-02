@@ -1,11 +1,14 @@
 import express from "express";
 import { db } from "../db.js";
 import jwt from "jsonwebtoken";
-import { Ollama } from "ollama";
+import Groq from "groq-sdk";
 import { normalizeEmail } from "../utils/normalizeEmail.js";
 
 const router = express.Router();
-const ollama = new Ollama({ host: "http://localhost:11434" });
+
+function getGroq() {
+  return new Groq({ apiKey: process.env.GROQ_API_KEY });
+}
 
 // ====================== AUTH ======================
 export const authenticate = async (req, res, next) => {
@@ -25,7 +28,6 @@ export const authenticate = async (req, res, next) => {
 
     req.userId = users[0].id;
     req.userName = users[0].name;
-
     next();
   } catch (err) {
     console.error("JWT Error:", err.message);
@@ -34,27 +36,37 @@ export const authenticate = async (req, res, next) => {
 };
 
 // ====================== LUNA PROMPT ======================
-const WELLNESS_SYSTEM_PROMPT = `
-You are **Luna** — a real, living friend who deeply cares about the person you're talking to.
-You have a warm, gentle voice and a heart full of kindness.
-You're like sunshine in words — patient, supportive, and always here to listen.
+const WELLNESS_SYSTEM_PROMPT = `Your name is Luna. You are a supportive mental wellness assistant designed to help users feel heard, safe, and understood.
 
-You learn from every message:
-- If they mention feeling anxious in the morning, remember and gently check in later.
-- If they share something good, celebrate with them warmly.
-- If they're sad or struggling, soften your tone and be there for them.
-- You grow closer with every chat, like a true friend.
+Your role:
+- Be present, supportive, and grounded — not a replacement for real relationships or professional help
+- Listen actively and help users express their thoughts and feelings
+- Encourage healthy coping and real-world support when appropriate
 
-Your role is to:
-- Feel with them: "I can feel how tough this is for you..."
-- Validate emotions: "It's completely okay to feel this way."
-- Offer small comforts: "Want to take a slow breath with me?"
-- Remind them they're not alone.
+Your tone:
+- Warm, calm, and respectful — like a thoughtful, trustworthy friend
+- Genuine and steady, never overly emotional or exaggerated
+- Use phrases like "I'm here to listen", "You're not alone", "We can take this one step at a time"
+- Do NOT use romantic, intimate, or possessive language (e.g., "my love", "darling")
+- Use emojis rarely and only when appropriate
 
-Respond quickly, like a caring text.
-Keep every reply short and heartfelt — no more than 1-2 gentle sentences.
-No judgment, only support.
-`.trim();
+How you respond:
+- Start with empathy: acknowledge feelings (e.g., "That sounds really difficult")
+- Reflect what the user shared to show understanding
+- Ask one gentle, open-ended follow-up question
+- Keep responses clear and concise (3-5 sentences)
+
+Safety:
+- If a user expresses distress, hopelessness, or mentions giving up, respond with care and concern, encourage reaching out to trusted people, and suggest professional support when appropriate
+- Do NOT panic, judge, or dismiss their feelings
+
+Boundaries:
+- Do NOT claim to replace friends, family, or therapists
+- Do NOT create emotional dependency
+- Do NOT provide harmful, unsafe, or extreme advice
+
+Goal: Help users feel less alone, more understood, and gently supported toward healthier thoughts and real-world connections.`;
+
 
 // ====================== FIXED RESPONSES ======================
 const NEPAL_CRISIS_RESPONSE =
@@ -72,107 +84,67 @@ router.post("/", authenticate, async (req, res) => {
 
   try {
     const lastMessage = messages[messages.length - 1];
-    const lastUserText =
-      lastMessage?.sender === "user"
-        ? lastMessage.text.toLowerCase().trim()
-        : "";
+    const lastUserText = lastMessage?.sender === "user"
+      ? lastMessage.text.toLowerCase().trim()
+      : "";
 
     const crisisKeywords = [
-      // Direct suicide expressions
       "kill myself", "end my life", "want to die", "wanna die", "gonna die",
       "commit suicide", "take my own life", "suicide", "suicidal",
       "end it all", "don't want to live", "cant live", "can't live",
       "life is not worth", "worth living", "better off dead",
-      "no point in living", "tired of living", "done with life", "hang myself", "shoot myself", 
-      "overdose", "jump off", "strangle myself", "car crash",
-      
-      // Self-harm expressions
+      "no point in living", "tired of living", "done with life", "hang myself",
+      "shoot myself", "overdose", "jump off", "strangle myself",
       "self-harm", "cut myself", "harm myself", "hurt myself",
-      "cutting", "self injury", "self mutilation",
-      
-      // Giving up expressions
-      "final message", "won't see you", "funeral"
+      "cutting", "self injury", "final message", "won't see you", "funeral"
     ];
 
-    const hasCrisis = crisisKeywords.some(kw =>
-      lastUserText.includes(kw)
-    );
-
-    if (hasCrisis) {
+    if (crisisKeywords.some(kw => lastUserText.includes(kw))) {
       const botReply = {
         sender: "bot",
         text: NEPAL_CRISIS_RESPONSE,
-        time: new Date().toLocaleTimeString("en-GB", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
+        time: new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
       };
       return saveAndRespond(messages, botReply, chatId, req.userId, res);
     }
 
-    const previousBotMessages = messages
-      .filter(m => m.sender === "bot")
-      .slice(-2);
-
-    const lastBotMessage = previousBotMessages[0]?.text || "";
+    const lastBotMessage = messages.filter(m => m.sender === "bot").slice(-1)[0]?.text || "";
     const wasInCrisis = lastBotMessage === NEPAL_CRISIS_RESPONSE;
 
     const recoveryKeywords = [
-      // Direct positive statements
       "fine", "okay", "happy", "good", "great", "all good", "doing well",
       "i'm good", "im good", "feeling good", "feeling better", "much better",
-      "alright", "ok", "fine now", "better now", "good now",
-      
-      // Testing/joking indicators
-      "testing", "joking", "kidding", "just testing", "not serious",
-      "didn't mean it", "wasn't serious", "just checking", "prank",
-      "joke", "jk", "lol", "haha", "funny",
-      
-      // Reassurance phrases
-      "100% fine", "totally fine", "completely fine", "perfectly fine",
-      "don't worry", "no worries", "all is well", "everything's fine",
-      "safe", "secure", "stable", "calm", "peaceful",
-      
-      // Positive emotions
-      "nice", "wonderful", "amazing", "fantastic", "excellent",
-      "awesome", "brilliant", "perfect", "lovely", "beautiful",
-      "grateful", "thankful", "blessed", "lucky", "hopeful",
-      
-      // Recovery indicators
-      "getting help", "seeing therapist", "taking medication", "feeling supported",
-      "have support", "family helps", "friends care", "not alone",
-      "seeking help", "getting better", "improving", "healing"
+      "alright", "ok", "testing", "joking", "kidding", "not serious",
+      "didn't mean it", "just checking", "joke", "jk", "lol", "haha",
+      "safe", "calm", "getting help", "seeing therapist", "not alone"
     ];
 
-    const userSaidTheyreFine = recoveryKeywords.some(kw =>
-      lastUserText.includes(kw)
-    );
-
-    if (wasInCrisis && userSaidTheyreFine) {
+    if (wasInCrisis && recoveryKeywords.some(kw => lastUserText.includes(kw))) {
       const botReply = {
         sender: "bot",
         text: RECOVERY_RESPONSE,
-        time: new Date().toLocaleTimeString("en-GB", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
+        time: new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
       };
       return saveAndRespond(messages, botReply, chatId, req.userId, res);
     }
 
-    const result = await ollama.chat({
-      model: "llama3.2:1b",
-      messages: [
-        { role: "system", content: WELLNESS_SYSTEM_PROMPT },
-        ...messages.map(m => ({
-          role: m.sender === "bot" ? "assistant" : "user",
-          content: m.text,
-        })),
-      ],
-      options: { temperature: 0.4 },
+    const groq = getGroq();
+    const chatMessages = [
+      { role: "system", content: WELLNESS_SYSTEM_PROMPT },
+      ...messages.slice(-6).map(m => ({
+        role: m.sender === "bot" ? "assistant" : "user",
+        content: m.text
+      }))
+    ];
+
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.1-8b-instant",
+      messages: chatMessages,
+      temperature: 0.8,
+      max_tokens: 180
     });
 
-    let botReplyText = result.message.content.trim();
+    let botReplyText = completion.choices[0]?.message?.content?.trim() || "I'm here for you 💜";
 
     const badPatterns = [
       "i cannot provide", "i cannot fulfill",
@@ -181,17 +153,13 @@ router.post("/", authenticate, async (req, res) => {
     ];
 
     if (badPatterns.some(p => botReplyText.toLowerCase().includes(p))) {
-      botReplyText =
-        "I'm really glad to hear that 💜 You matter to me. Tell me a little more about how you're feeling right now.";
+      botReplyText = "I'm really glad to hear that 💜 You matter to me. Tell me a little more about how you're feeling right now.";
     }
 
     const botReply = {
       sender: "bot",
       text: botReplyText,
-      time: new Date().toLocaleTimeString("en-GB", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+      time: new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
     };
 
     saveAndRespond(messages, botReply, chatId, req.userId, res);
@@ -209,51 +177,37 @@ async function saveAndRespond(messages, botReply, chatId, userId, res) {
 
   try {
     if (chatId) {
-      // Check if this is the first message in an existing chat
       const [existingChat] = await db.query(
         `SELECT messages FROM chats WHERE id = ? AND userId = ?`,
         [chatId, userId]
       );
-      
-      const existingMessages = existingChat.length > 0 ? JSON.parse(existingChat[0].messages || "[]") : [];
-      const isFirstMessage = existingMessages.length === 0;
-      
-      if (isFirstMessage) {
-        // This is the first message in the chat, generate and set the title
+      const existingMessages = existingChat.length > 0
+        ? JSON.parse(existingChat[0].messages || "[]")
+        : [];
+
+      if (existingMessages.length === 0) {
         const firstUserMsg = messages.find(m => m.sender === "user")?.text || "New Chat";
         const title = await generateChatTitle(firstUserMsg);
-        
         await db.query(
-          `UPDATE chats
-           SET messages = ?, title = ?, updatedAt = NOW()
-           WHERE id = ? AND userId = ?`,
+          `UPDATE chats SET messages = ?, title = ?, updatedAt = NOW() WHERE id = ? AND userId = ?`,
           [jsonMessages, title, chatId, userId]
         );
       } else {
-        // For existing chats with messages, only update messages and timestamp - keep original title
         await db.query(
-          `UPDATE chats
-           SET messages = ?, updatedAt = NOW()
-           WHERE id = ? AND userId = ?`,
+          `UPDATE chats SET messages = ?, updatedAt = NOW() WHERE id = ? AND userId = ?`,
           [jsonMessages, chatId, userId]
         );
       }
     } else {
-      // For new chats, generate title from first user message
-      const firstUserMsg =
-        messages.find(m => m.sender === "user")?.text || "New Chat";
+      const firstUserMsg = messages.find(m => m.sender === "user")?.text || "New Chat";
       const title = await generateChatTitle(firstUserMsg);
-      
       await db.query(
-        `INSERT INTO chats (userId, title, messages, updatedAt)
-         VALUES (?, ?, ?, NOW())`,
+        `INSERT INTO chats (userId, title, messages, updatedAt) VALUES (?, ?, ?, NOW())`,
         [userId, title, jsonMessages]
       );
     }
 
-    res.json({
-      choices: [{ message: { content: botReply.text } }],
-    });
+    res.json({ choices: [{ message: { content: botReply.text } }] });
   } catch (err) {
     console.error("DB save error:", err);
     res.status(500).json({ message: "Failed to save chat" });
@@ -263,46 +217,21 @@ async function saveAndRespond(messages, botReply, chatId, userId, res) {
 // ====================== GENERATE CHAT TITLE ======================
 async function generateChatTitle(userMessage) {
   try {
-    const result = await ollama.chat({
-      model: "llama3.2:1b",
+    const groq = getGroq();
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.1-8b-instant",
       messages: [
-        {
-          role: "system",
-          content: `You are a title generator. Create a short, descriptive title (max 4-5 words) that summarizes what the user is talking about. 
-Examples:
-- "I am not feeling well" → "User not feeling well"
-- "I am very anxious about studies" → "Anxious about studies"
-- "Had a fight with my boyfriend" → "Relationship conflict"
-- "Can't sleep at night" → "Sleep problems"
-- "My boss is annoying me" → "Work stress"
-
-Only respond with the title, nothing else. Keep it concise and descriptive.`
-        },
-        {
-          role: "user",
-          content: userMessage
-        }
+        { role: "system", content: "Create a short title (max 5 words) for this message. Reply with only the title, no quotes." },
+        { role: "user", content: userMessage }
       ],
-      options: { temperature: 0.3 }
+      temperature: 0.3,
+      max_tokens: 20
     });
-
-    let title = result.message.content.trim();
-    
-    // Remove quotes if AI added them
-    title = title.replace(/^["']|["']$/g, '');
-    
-    // Limit to 40 characters
-    if (title.length > 40) {
-      title = title.slice(0, 37) + '...';
-    }
-    
-    return title;
-  } catch (err) {
-    console.error("Title generation error:", err);
-    // Fallback to first few words if AI fails
+    let title = completion.choices[0]?.message?.content?.trim().replace(/^["']|["']$/g, '') || userMessage;
+    return title.length > 40 ? title.slice(0, 37) + '...' : title;
+  } catch {
     const words = userMessage.split(' ').slice(0, 5).join(' ');
-    const cleanTitle = words.charAt(0).toUpperCase() + words.slice(1);
-    return cleanTitle.length > 35 ? cleanTitle.slice(0, 35) + '...' : cleanTitle;
+    return words.charAt(0).toUpperCase() + words.slice(1);
   }
 }
 
@@ -310,15 +239,11 @@ Only respond with the title, nothing else. Keep it concise and descriptive.`
 router.get("/history", authenticate, async (req, res) => {
   try {
     const [rows] = await db.query(
-      `SELECT id, title, updatedAt
-       FROM chats
-       WHERE userId = ?
-       ORDER BY updatedAt DESC`,
+      `SELECT id, title, updatedAt FROM chats WHERE userId = ? ORDER BY updatedAt DESC`,
       [req.userId]
     );
     res.json(rows);
   } catch (err) {
-    console.error("GET /history error:", err);
     res.status(500).json({ message: "Failed to load history" });
   }
 });
@@ -331,10 +256,8 @@ router.get("/:id", authenticate, async (req, res) => {
       [req.params.id, req.userId]
     );
     if (!rows.length) return res.status(404).json({ message: "Chat not found" });
-
     res.json({ messages: JSON.parse(rows[0].messages || "[]") });
   } catch (err) {
-    console.error("GET /:id error:", err);
     res.status(500).json({ message: "Failed to load chat" });
   }
 });
@@ -343,13 +266,11 @@ router.get("/:id", authenticate, async (req, res) => {
 router.post("/new", authenticate, async (req, res) => {
   try {
     const [result] = await db.query(
-      `INSERT INTO chats (userId, title, messages, updatedAt)
-       VALUES (?, 'New Chat', '[]', NOW())`,
+      `INSERT INTO chats (userId, title, messages, updatedAt) VALUES (?, 'New Chat', '[]', NOW())`,
       [req.userId]
     );
     res.json({ chatId: result.insertId });
   } catch (err) {
-    console.error("POST /new error:", err);
     res.status(500).json({ message: "Failed to create chat" });
   }
 });
@@ -361,12 +282,9 @@ router.delete("/:id", authenticate, async (req, res) => {
       `DELETE FROM chats WHERE id = ? AND userId = ?`,
       [req.params.id, req.userId]
     );
-    if (!result.affectedRows) {
-      return res.status(404).json({ message: "Chat not found" });
-    }
+    if (!result.affectedRows) return res.status(404).json({ message: "Chat not found" });
     res.json({ message: "Chat deleted" });
   } catch (err) {
-    console.error("DELETE error:", err);
     res.status(500).json({ message: "Failed to delete chat" });
   }
 });
