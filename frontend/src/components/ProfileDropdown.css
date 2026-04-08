@@ -1,0 +1,420 @@
+.profile-circle {
+  background-color: rgba(149, 101, 184, 0.85);
+  color: #fff;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  margin-right: 15px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.profile-circle:hover {
+  transform: scale(1.1);
+}
+
+.profile-pic-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.profile-wrapper {
+  position: relative;
+  margin-right: 0px;
+}
+
+.profile-dropdown {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  background: rgba(255, 252, 248, 0.98);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  width: 240px;
+  z-index: 999999;
+  animation: dropdownFadeIn 0.2s ease;
+}
+
+/* Sidebar variant — opens upward from bottom-left */
+.profile-dropdown-sidebar {
+  top: auto !important;
+  right: auto !important;
+  bottom: 56px;
+  left: 0;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profile-dropdown-header {
+  padding: 16px 16px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 88px;
+  border-bottom: 1px solid rgba(149, 101, 184, 0.2);
+}
+
+.profile-dropdown-pic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: rgba(149, 101, 184, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-dropdown-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-dropdown-initial {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.profile-dropdown-info {
+  flex: 1;
+}
+
+.profile-dropdown-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1b1b1b;
+  margin-bottom: 3px;
+}
+
+.photo-link {
+  background: none;
+  border: none;
+  color: #9565B8;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  font-weight: 500;
+  text-align: left;
+}
+
+.photo-link:hover {
+  color: #814EA0;
+  text-decoration: underline;
+}
+
+.name-edit-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.name-edit-input {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1b1b1b;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  padding: 5px 8px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.9);
+  width: 100%;
+  max-width: 130px;
+  transition: border-color 0.2s ease;
+}
+
+.name-edit-input:focus {
+  border-color: #9565B8;
+}
+
+.name-edit-buttons {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-start;
+}
+
+.name-save-btn {
+  background: #9565B8;
+  border: none;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  min-width: 32px;
+  box-shadow: 0 6px 12px rgba(149,101,184,0.4);
+  transition: all 0.3s ease;
+  transform: translateZ(0);
+  cursor: pointer;
+}
+
+.name-save-btn::after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 10px;
+  border: solid #E7EBDC;
+  border-width: 0 2px 2px 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%) rotate(45deg);
+}
+
+.name-save-btn:hover {
+  background-color: #814EA0;
+  box-shadow:
+      0 8px 20px rgba(129,78,160,0.5),
+      0 0 60px rgba(129,78,160,0.4),
+      0 0 100px rgba(129,78,160,0.25),
+      0 0 150px rgba(129,78,160,0.15);
+}
+
+.name-cancel-btn {
+  background: rgba(149, 101, 184, 0.15);
+  color: #814EA0;
+  border: 1px solid rgba(149, 101, 184, 0.35);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 8px rgba(149, 101, 184, 0.1);
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 300;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  min-width: 32px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.name-cancel-btn:hover {
+  background: rgba(149, 101, 184, 0.25);
+  color: #6b3d8f;
+  box-shadow: 0 6px 16px rgba(149, 101, 184, 0.2);
+  border-color: rgba(149, 101, 184, 0.55);
+}
+
+.profile-dropdown-actions {
+  padding: 0;
+}
+
+.profile-dropdown-row {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+}
+
+.profile-dropdown-item-half {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-size: 15px;
+  color: #444;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  font-weight: 600;
+}
+
+.profile-dropdown-item-half:hover {
+  background: rgba(149, 101, 184, 0.12);
+  color: #9565B8;
+}
+
+.profile-dropdown-item-half.active {
+  background: rgba(149, 101, 184, 0.28);
+  color: #814EA0;
+}
+
+
+/* Logout Confirmation Modal - Same as Journal Delete Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(3px);
+  animation: modalOverlayFadeIn 0.3s ease-out;
+}
+
+@keyframes modalOverlayFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(3px);
+  }
+}
+
+.modal-content {
+  background: rgba(255, 252, 248, 0.98);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 16px;
+  padding: 0;
+  width: 320px;
+  height: 200px;
+  max-width: 90vw;
+  box-shadow: 0 8px 24px rgba(149, 101, 184, 0.15);
+  animation: modalSlideIn 0.08s ease-out;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-header {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid rgba(149, 101, 184, 0.2);
+  flex-shrink: 0;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #1b1b1b;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.modal-body {
+  padding: 16px 20px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.modal-body p {
+  margin: 0;
+  color: #1b1b1b;
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+.modal-actions {
+  padding: 12px 20px 16px;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.modal-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-btn.cancel-btn {
+  background: rgba(149, 101, 184, 0.15);
+  color: #814EA0;
+  border: 1px solid rgba(149, 101, 184, 0.35);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 8px rgba(149, 101, 184, 0.1);
+}
+
+.modal-btn.cancel-btn:hover {
+  background: rgba(149, 101, 184, 0.25);
+  color: #6b3d8f;
+  box-shadow: 0 6px 16px rgba(149, 101, 184, 0.2);
+  border-color: rgba(149, 101, 184, 0.55);
+}
+
+.modal-btn.delete-btn {
+  background: #9565B8;
+  color: #E7EBDC;
+  border: 1px solid rgba(149, 101, 184, 0.3);
+  box-shadow: 0 6px 12px rgba(149, 101, 184, 0.25);
+}
+
+.modal-btn.delete-btn:hover {
+  background: #814EA0;
+  box-shadow: 0 8px 20px rgba(129, 78, 160, 0.5), 0 0 60px rgba(129, 78, 160, 0.4);
+  border-color: rgba(129, 78, 160, 0.5);
+}
+
+.modal-btn:active {
+  transform: scale(0.98);
+}
+
+.modal-btn.cancel-btn:active {
+  background: rgba(255, 255, 255, 1);
+}
+
+.modal-btn.delete-btn:active {
+  background: #6b3d8f;
+}
+
+.modal-btn.delete-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(129, 78, 160, 0.1), rgba(129, 78, 160, 0.2));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 8px;
+}
+
+.modal-btn.delete-btn:hover::before {
+  opacity: 1;
+}
