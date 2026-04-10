@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import OpenEyeIcon from '../assets/icons/open-eye.png';
 import ClosedEyeIcon from '../assets/icons/closed-eye.png';
+import AccountDeleteModal from './AccountDeleteModal';
+import './AccountDeleteModal.css';
 
 const API = 'http://localhost:5001/api';
 
@@ -14,6 +16,7 @@ export default function UserSettingsModal({ onClose, profilePic, setProfilePic, 
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [popup, setPopup] = useState({ show: false, title: '', message: '' });
   const navigate = useNavigate();
 
@@ -114,6 +117,7 @@ export default function UserSettingsModal({ onClose, profilePic, setProfilePic, 
               <div className="us-field" style={{ position: 'relative' }}>
                 <label className="us-label">Display Name</label>
                 <input type="text" required className="us-input"
+                  autoComplete="off"
                   value={nameInput}
                   onChange={e => setNameInput(e.target.value)}
                   placeholder="Enter display name"
@@ -206,6 +210,19 @@ export default function UserSettingsModal({ onClose, profilePic, setProfilePic, 
               </div>
             </form>
           </div>
+
+          <div className="us-divider" />
+
+          {/* Delete Account Section */}
+          <div className="us-section-delete">
+            <button 
+              type="button" 
+              className="us-btn-delete-link" 
+              onClick={() => setShowDeleteModal(true)}
+            >
+              DELETE ACCOUNT
+            </button>
+          </div>
         </div>
       </div>
 
@@ -236,6 +253,16 @@ export default function UserSettingsModal({ onClose, profilePic, setProfilePic, 
             </div>
           </div>
         </div>
+      )}
+
+      {showDeleteModal && (
+        <AccountDeleteModal 
+          onClose={() => setShowDeleteModal(false)} 
+          onDeleted={() => {
+            setShowDeleteModal(false);
+            onClose(); // Close settings modal
+          }} 
+        />
       )}
     </div>
   );

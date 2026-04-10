@@ -22,9 +22,18 @@
   flex-direction: column;
 }
 
-.us-modal::-webkit-scrollbar { width: 6px; }
-.us-modal::-webkit-scrollbar-track { background: transparent; }
-.us-modal::-webkit-scrollbar-thumb { background: rgba(149, 101, 184, 0.4); border-radius: 10px; }
+.us-modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.us-modal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.us-modal::-webkit-scrollbar-thumb {
+  background: rgba(149, 101, 184, 0.4);
+  border-radius: 10px;
+}
 
 .us-header {
   padding: 20px 24px 16px;
@@ -53,7 +62,9 @@
   transition: color 0.2s;
 }
 
-.us-close:hover { color: #9565B8; }
+.us-close:hover {
+  color: #9565B8;
+}
 
 .us-body {
   padding: 20px 24px 24px;
@@ -87,7 +98,11 @@
   border: 3px solid rgba(255, 255, 255, 0.8);
 }
 
-.us-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.us-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
 .us-avatar-overlay {
   position: absolute;
@@ -102,7 +117,9 @@
   border-radius: 50%;
 }
 
-.us-avatar:hover .us-avatar-overlay { opacity: 1; }
+.us-avatar:hover .us-avatar-overlay {
+  opacity: 1;
+}
 
 .us-avatar-actions {
   display: flex;
@@ -162,7 +179,9 @@
   font-family: inherit;
 }
 
-.us-input::placeholder { color: #999; }
+.us-input::placeholder {
+  color: #999;
+}
 
 .us-input:focus {
   border-color: #9565B8;
@@ -175,7 +194,9 @@
   align-items: center;
 }
 
-.us-pw-wrap .us-input { padding-right: 110px; }
+.us-pw-wrap .us-input {
+  padding-right: 110px;
+}
 
 .us-pw-strength {
   position: absolute;
@@ -187,9 +208,18 @@
   pointer-events: none;
   z-index: 2;
 }
-.us-pw-strength.weak   { color: #d32542; }
-.us-pw-strength.medium { color: #d56408; }
-.us-pw-strength.strong { color: #178749; }
+
+.us-pw-strength.weak {
+  color: #d32542;
+}
+
+.us-pw-strength.medium {
+  color: #d56408;
+}
+
+.us-pw-strength.strong {
+  color: #178749;
+}
 
 .us-pw-requirements ul {
   margin: 4px 0 12px;
@@ -224,7 +254,9 @@
   transition: none;
 }
 
-.us-pw-toggle img:hover { opacity: 0.55; }
+.us-pw-toggle img:hover {
+  opacity: 0.55;
+}
 
 .us-btn-primary {
   padding: 10px 22px;
@@ -297,10 +329,23 @@
   margin-left: auto;
 }
 
-.us-btn-forgot:hover { color: #814EA0; }
+.us-btn-forgot:hover {
+  color: #814EA0;
+}
 
-.us-error { color: #dc2626; font-size: 13px; margin: 0; font-weight: 500; }
-.us-success { color: #059669; font-size: 13px; margin: 0; font-weight: 500; }
+.us-error {
+  color: #dc2626;
+  font-size: 13px;
+  margin: 0;
+  font-weight: 500;
+}
+
+.us-success {
+  color: #059669;
+  font-size: 13px;
+  margin: 0;
+  font-weight: 500;
+}
 
 .us-toast {
   position: fixed;
@@ -314,12 +359,48 @@
   font-size: 14px;
   font-weight: 500;
   z-index: 100001;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   animation: toastIn 0.2s ease-out;
   white-space: nowrap;
 }
 
 @keyframes toastIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Delete Account Section Styling */
+.us-section-delete {
+  margin-top: -8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.us-btn-delete-link {
+  background: none;
+  border: none;
+  color: #e86c6c;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 8px 0;
+  text-align: center;
+  transition: color 0.2s ease;
+  width: auto;
+  letter-spacing: 0.5px;
+}
+
+.us-btn-delete-link:hover {
+  color: #cf5d5d;
 }
