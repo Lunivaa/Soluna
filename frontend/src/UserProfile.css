@@ -1,0 +1,6 @@
+/* UserProfile page — reuses AdminDashboard ps-* classes */
+.soluna-admin-dashboard {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
