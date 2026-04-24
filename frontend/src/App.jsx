@@ -1,5 +1,11 @@
-import React, { useState, useRef } from "react";
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, Navigate } from "react-router-dom";
+import { FiChevronLeft, FiChevronRight, FiMail, FiPhone, FiMapPin, FiInstagram } from "react-icons/fi";
+import { SubscriptionProvider } from "./contexts/SubscriptionContext";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import SubscriptionModal from "./components/SubscriptionModal";
+import AppLayout from "./components/AppLayout";
+import { API_URL } from "./api";
 import "./App.css";
 
 // Import logos and icons
@@ -23,9 +29,24 @@ import HomePage from "./HomePage";
 import ResetPasswordPage from "./ResetPasswordPage.jsx";
 import JournalPage from "./JournalPage";
 import Chatbot from "./Chatbot";
+import MoodTracker from "./MoodTracker";
+import Libraries from "./Libraries";
+import BreathingExercises from "./BreathingExercises";
+import BreathingPlayer from "./BreathingPlayer";
+import SoundLoops from "./SoundLoops";
+import MeditationAudio from "./MeditationAudio";
+import MeditationPlayer from "./MeditationPlayer";
+import CreativeCanvas from "./CreativeCanvas";
+import ColoringTemplate from "./ColoringTemplate";
+import ProgressReport from "./ProgressReport";
+import PaymentResult from "./PaymentResult";
+import AdminDashboard from "./admin/AdminDashboard";
+import UserProfile from "./UserProfile";
+import AdminResetPasswordPage from "./admin/AdminResetPasswordPage";
+import SciencePage from "./SciencePage";
 
 // Array of images for cursor animation
-const wellnessImages = Array.from({ length: 15 }, (_, i) =>
+const wellnessImages = Array.from({ length: 20 }, (_, i) =>
   `/images/Wellness${i + 1}.jpg`
 );
 
@@ -70,6 +91,30 @@ function Home() {
   const canSpawn = useRef(true); // Prevents too many images at once
   const seqIndex = useRef(0); // Tracks which image to show next
   const navigate = useNavigate(); // For routing on button click
+  const [reviews, setReviews] = useState([]);
+  const [reviewPage, setReviewPage] = useState(0);
+  const REVIEWS_PER_PAGE = 4;
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/feedback/public`)
+      .then(r => r.json())
+      .then(data => setReviews(Array.isArray(data) ? data : []))
+      .catch(() => {});
+  }, []);
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const token = (localStorage.getItem('token') || sessionStorage.getItem('token'));
+    if (token) {
+      navigate('/home');
+      return;
+    }
+    // Scroll to footer if returning from a footer link
+    if (sessionStorage.getItem('fromFooter')) {
+      sessionStorage.removeItem('fromFooter');
+      setTimeout(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }), 100);
+    }
+  }, [navigate]);
 
   // Handle mouse movement for cursor images
   const handleMouseMove = (e) => {
@@ -126,7 +171,7 @@ function Home() {
   };
 
   return (
-    <div>
+    <div style={{ background: 'linear-gradient(135deg, #b7c6fa,#b5d1fc, #c1a9fb, #e1bdff)', display: 'flex', flexDirection: 'column' }}>
       {/* Landing Page */}
       <div className="landing-page" onMouseMove={handleMouseMove}>
         <div className="header">
@@ -150,9 +195,9 @@ function Home() {
             src={img.src}
             className="wellness-img"
             style={{
-              left: img.x - 100 + "px",
-              top: img.y - 120 + "px",
-              transform: `rotate(${img.rotation}deg) scale(${img.scale})`,
+              left: img.x + "px",
+              top: img.y + "px",
+              transform: `translate(-50%, -50%) rotate(${img.rotation}deg) scale(${img.scale})`,
               opacity: img.opacity,
             }}
             alt="wellness"
@@ -192,59 +237,178 @@ function Home() {
         </div>
       </div>
 
-      {/* Footer */}
-    <footer className="footer">
-      <div className="footer-content">
-        <div className="footer-logo">
-          <img src={whitelogo} alt="Logo" />
+      {/* User Reviews Section */}
+      <div className="reviews-section">
+        <h2 className="services-title">What Our Users Say</h2>
+        <p className="services-subtitle">Real experiences from our community</p>
+        <div className="reviews-carousel">
+          <button
+            className="reviews-nav-btn"
+            onClick={() => setReviewPage(p => Math.max(0, p - 1))}
+            disabled={reviewPage === 0}
+          ><FiChevronLeft size={22} /></button>
+          <div className="reviews-grid">
+            {reviews.slice(reviewPage * REVIEWS_PER_PAGE, (reviewPage + 1) * REVIEWS_PER_PAGE).map((r, i) => (
+              <div key={i} className="review-card">
+                <span className="review-quote-mark">"</span>
+                <div className="review-stars">
+                  {[1,2,3,4,5].map(s => (
+                    <span key={s} style={{ color: s <= r.rating ? '#9565B8' : 'rgba(149,101,184,0.25)', fontSize: '15px' }}>★</span>
+                  ))}
+                </div>
+                <p className="review-comment">{r.comment}</p>
+                <div className="review-footer">
+                  <div className="review-name-initial">
+                    {r.avatar
+                      ? <img src={r.avatar} alt={r.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                      : (r.name || 'A').charAt(0).toUpperCase()
+                    }
+                  </div>
+                  <span className="review-name">{r.name || 'Anonymous'}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <button
+            className="reviews-nav-btn"
+            onClick={() => setReviewPage(p => Math.min(Math.ceil(reviews.length / REVIEWS_PER_PAGE) - 1, p + 1))}
+            disabled={reviewPage >= Math.ceil(reviews.length / REVIEWS_PER_PAGE) - 1}
+          ><FiChevronRight size={22} /></button>
         </div>
-
-        <div className="footer-links">
-          <Link to="/contact" className="footer-btn">
-            Contact Us
-          </Link>
-          <a
-            href="https://instagram.com/lu.niva"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Instagram
-          </a>
-          <Link to="/about" className="footer-btn">
-            About Us
-          </Link>
-          <Link to="/help" className="footer-btn">
-            Help & Support
-          </Link>
-        </div>
-
-        <div className="footer-copy">
-          &copy; {new Date().getFullYear()} Soluna. All rights reserved.
-        </div>
+        {reviews.length > 0 && (
+          <div className="reviews-dots-row">
+            {Array.from({ length: Math.max(1, Math.ceil(reviews.length / REVIEWS_PER_PAGE)) }).map((_, i) => (
+              <span key={i} className={`reviews-dot ${i === reviewPage ? 'active' : ''}`} onClick={() => setReviewPage(i)} />
+            ))}
+          </div>
+        )}
       </div>
-    </footer>
+
+      {/* Footer */}
+      <footer className="footer">
+        <div className="footer-main">
+
+          {/* Col 1 - Brand */}
+          <div className="footer-brand">
+            <img src={whitelogo} alt="Soluna Logo" className="footer-logo-img" />
+            <p className="footer-tagline">A safe space to nurture your mental wellbeing — one mindful moment at a time.</p>
+            <div className="footer-socials">
+              <a href="https://instagram.com/lu.niva" target="_blank" rel="noreferrer" className="footer-social" aria-label="Instagram">
+                <FiInstagram size={16} />
+                @Soluna
+              </a>
+            </div>
+          </div>
+
+          {/* Col 2 - Features */}
+          <div className="footer-col">
+            <h4 className="footer-col-title">Features</h4>
+            <ul className="footer-col-list">
+              <li>Mood Tracking</li>
+              <li>Journal</li>
+              <li>Chatbot</li>
+              <li>Self-Care Library</li>
+              <li>Progress Reports</li>
+            </ul>
+          </div>
+
+          {/* Col 3 - Company */}
+          <div className="footer-col">
+            <h4 className="footer-col-title">Company</h4>
+            <ul className="footer-col-list">
+              <li><Link to="/about" onClick={() => sessionStorage.setItem('fromFooter', '1')}>About Us</Link></li>
+              <li><Link to="/science" onClick={() => sessionStorage.setItem('fromFooter', '1')}>Scientific Foundation</Link></li>
+              <li><Link to="/contact" onClick={() => sessionStorage.setItem('fromFooter', '1')}>Contact Us</Link></li>
+              <li><Link to="/help" onClick={() => sessionStorage.setItem('fromFooter', '1')}>Help & Support</Link></li>
+              <li><Link to="/terms" onClick={() => sessionStorage.setItem('fromFooter', '1')}>Terms & Conditions</Link></li>
+              <li><Link to="/privacy" onClick={() => sessionStorage.setItem('fromFooter', '1')}>Privacy Policy</Link></li>
+            </ul>
+          </div>
+
+          {/* Col 4 - Contact */}
+          <div className="footer-col">
+            <h4 className="footer-col-title">Get in Touch</h4>
+            <ul className="footer-col-list footer-contact-list">
+              <li>
+                <FiMail size={15} />
+                wellnesssoluna@gmail.com
+              </li>
+              <li>
+                <FiPhone size={15} />
+                +977 9741847218
+              </li>
+              <li>
+                <FiMapPin size={15} />
+                Ason, Kathmandu, Nepal
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        {/* Bottom bar */}
+        <div className="footer-bottom">
+          <span>&copy; {new Date().getFullYear()} Soluna. All rights reserved.</span>
+          <div className="footer-bottom-links">
+            <Link to="/terms" onClick={() => sessionStorage.setItem('fromFooter', '1')}>Terms</Link>
+            <Link to="/privacy" onClick={() => sessionStorage.setItem('fromFooter', '1')}>Privacy</Link>
+            <Link to="/help" onClick={() => sessionStorage.setItem('fromFooter', '1')}>Support</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
 
 // App routes
+function ProtectedRoute({ children }) {
+  const token = (localStorage.getItem('token') || sessionStorage.getItem('token'));
+  const { isPreview } = useAuth();
+  if (!token && !isPreview) return <Navigate to="/" replace />;
+  return children;
+}
+
 export default function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<AboutUs />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/help" element={<HelpSupport />} />
-        <Route path="/auth" element={<AuthPage />} />
-        <Route path="/terms" element={<TermsPage />} />
-        <Route path="/privacy" element={<PrivacyPage />} />
-        <Route path="/forgot-password" element={<ForgetPasswordPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/journal" element={<JournalPage />} />
-        <Route path="/chatbot" element={<Chatbot />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+    <SubscriptionProvider>
+      <Router>
+        <SubscriptionModal />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/help" element={<HelpSupport />} />
+          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/forgot-password" element={<ForgetPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/home" element={<ProtectedRoute><AppLayout><HomePage /></AppLayout></ProtectedRoute>} />
+          <Route path="/journal" element={<ProtectedRoute><AppLayout><JournalPage /></AppLayout></ProtectedRoute>} />
+          <Route path="/chatbot" element={<ProtectedRoute><AppLayout><Chatbot /></AppLayout></ProtectedRoute>} />
+          <Route path="/mood" element={<ProtectedRoute><AppLayout><MoodTracker /></AppLayout></ProtectedRoute>} />
+          <Route path="/libraries" element={<ProtectedRoute><AppLayout><Libraries /></AppLayout></ProtectedRoute>} />
+          <Route path="/libraries/breathing" element={<ProtectedRoute><AppLayout><BreathingExercises /></AppLayout></ProtectedRoute>} />
+          <Route path="/libraries/breathing/:id" element={<ProtectedRoute><AppLayout><BreathingPlayer /></AppLayout></ProtectedRoute>} />
+          <Route path="/libraries/sounds" element={<ProtectedRoute><AppLayout><SoundLoops /></AppLayout></ProtectedRoute>} />
+          <Route path="/libraries/sounds/:id" element={<ProtectedRoute><AppLayout><SoundLoops /></AppLayout></ProtectedRoute>} />
+          <Route path="/libraries/meditation" element={<ProtectedRoute><AppLayout><MeditationAudio /></AppLayout></ProtectedRoute>} />
+          <Route path="/libraries/meditation/:id" element={<ProtectedRoute><AppLayout><MeditationPlayer /></AppLayout></ProtectedRoute>} />
+          <Route path="/creative-canvas" element={<ProtectedRoute><AppLayout><CreativeCanvas /></AppLayout></ProtectedRoute>} />
+          <Route path="/creative-canvas/coloring-templates/:templateId" element={<ProtectedRoute><AppLayout><CreativeCanvas /></AppLayout></ProtectedRoute>} />
+          <Route path="/coloring-template/:templateId" element={<ProtectedRoute><AppLayout><ColoringTemplate /></AppLayout></ProtectedRoute>} />
+          <Route path="/reports" element={<ProtectedRoute><AppLayout><ProgressReport /></AppLayout></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><AppLayout><UserProfile /></AppLayout></ProtectedRoute>} />
+          <Route path="/payment/success" element={<PaymentResult />} />
+          <Route path="/payment/failure" element={<PaymentResult />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin-reset-password" element={<AdminResetPasswordPage />} />
+          <Route path="/science" element={<SciencePage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Router>
+    </SubscriptionProvider>
+    </AuthProvider>
   );
 }
