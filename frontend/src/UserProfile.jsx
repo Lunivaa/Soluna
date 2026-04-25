@@ -87,6 +87,7 @@ export default function UserProfile() {
               img.src = reader.result;
             };
             reader.readAsDataURL(file);
+            e.target.value = '';
           }}
         />
 
@@ -110,9 +111,15 @@ export default function UserProfile() {
                 <button className="ps-btn-upload-full" onClick={() => document.getElementById('up-pic-upload').click()}>
                   Upload New Photo
                 </button>
-                {user.avatar && (
-                  <button className="ps-btn-signout-card" onClick={() => setShowRemovePhotoModal(true)}>Remove Photo</button>
-                )}
+                <button className="ps-btn-signout-card" onClick={() => {
+                  if (!user.avatar) {
+                    showPopup('No Photo', 'There is no profile photo to remove.');
+                  } else {
+                    setShowRemovePhotoModal(true);
+                  }
+                }}>
+                  Remove Photo
+                </button>
               </div>
             </div>
 
@@ -125,7 +132,7 @@ export default function UserProfile() {
                 <form onSubmit={async (e) => {
                   e.preventDefault();
                   if (!nameInput.trim()) return;
-                  if (nameInput.trim() === adminName) {
+                  if (nameInput.trim() === user.name) {
                     showPopup('No Changes', 'The name is the same as the current one.');
                     return;
                   }
@@ -289,6 +296,8 @@ export default function UserProfile() {
               <button className="modal-btn delete-btn" onClick={async () => {
                 setShowRemovePhotoModal(false);
                 updateProfile({ avatar: null });
+                const fileInput = document.getElementById('up-pic-upload');
+                if (fileInput) fileInput.value = '';
                 try { await axios.put(`${API}/auth/profile/avatar`, { avatar: null }, { headers: getHeaders() }); } catch {}
               }}>Remove</button>
             </div>

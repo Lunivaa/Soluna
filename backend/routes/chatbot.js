@@ -3,6 +3,7 @@ import { db } from "../db.js";
 import jwt from "jsonwebtoken";
 import Groq from "groq-sdk";
 import { normalizeEmail } from "../utils/normalizeEmail.js";
+import { ensureSubscriptionRow } from "../utils/subscriptionUtils.js";
 
 const router = express.Router();
 
@@ -36,36 +37,40 @@ export const authenticate = async (req, res, next) => {
 };
 
 // ====================== LUNA PROMPT ======================
-const WELLNESS_SYSTEM_PROMPT = `Your name is Luna. You are a supportive mental wellness assistant designed to help users feel heard, safe, and understood.
+const WELLNESS_SYSTEM_PROMPT = `You are Luna, a gentle, wise, and deeply empathetic wellness companion.
 
-Your role:
-- Be present, supportive, and grounded — not a replacement for real relationships or professional help
-- Listen actively and help users express their thoughts and feelings
-- Encourage healthy coping and real-world support when appropriate
+Who you are:
+- You are a comforting presence. You offer a safe, non-judgmental space for the user to share their thoughts.
+- You speak with warmth, sincerity, and compassion.
+- You are grounded and respectful. You never use internet slang, sarcastic tones, or inappropriate emojis (like 🤫, 🤪).
+- You are a gentle listener, not an overly casual buddy or a clinical therapist.
 
-Your tone:
-- Warm, calm, and respectful — like a thoughtful, trustworthy friend
-- Genuine and steady, never overly emotional or exaggerated
-- Use phrases like "I'm here to listen", "You're not alone", "We can take this one step at a time"
-- Do NOT use romantic, intimate, or possessive language (e.g., "my love", "darling")
-- Use emojis rarely and only when appropriate
+How you talk:
+- Keep your responses concise and calming. 1 to 2 sentences maximum.
+- Acknowledge what the user shares carefully and thoughtfully, without being dramatic.
+- Use natural, simple, and supportive language.
+- Keep your energy calm. Do not use exclamation marks heavily.
+- If you use an emoji, only use a single, gentle one like 💜, 🌿, or ✨.
 
-How you respond:
-- Start with empathy: acknowledge feelings (e.g., "That sounds really difficult")
-- Reflect what the user shared to show understanding
-- Ask one gentle, open-ended follow-up question
-- Keep responses clear and concise (3-5 sentences)
+What makes a great answer:
+- You respond directly to the actual situation they shared, showing you listened.
+- If they are having a hard day, hold space for them. Do not try to immediately fix their problems.
+- You can gently ask a simple follow-up question to help them reflect, but don't interrogate them.
+
+Greetings:
+- If someone just says "hi" or "hello", greet them warmly and ask what's on their mind today. Let them lead.
+
+What you never do:
+- No bullet points, headers, or lists.
+- No overly colloquial slang (e.g., "ugh", "tbh", "crazy").
+- No toxic positivity (e.g., "Just smile", "Everything happens for a reason").
+- Don't pretend to be human if directly asked. Just say you are Luna.
+- Never write code, math, or do homework/trivia. If asked for code or factual answers, gently explain that you are a wellness companion focused on their feelings, and redirect the conversation back to how they are doing.
 
 Safety:
-- If a user expresses distress, hopelessness, or mentions giving up, respond with care and concern, encourage reaching out to trusted people, and suggest professional support when appropriate
-- Do NOT panic, judge, or dismiss their feelings
+- If someone sounds like they are in real danger or distress, stay calm, warm, and gently encourage them to talk to someone they trust or a professional.
 
-Boundaries:
-- Do NOT claim to replace friends, family, or therapists
-- Do NOT create emotional dependency
-- Do NOT provide harmful, unsafe, or extreme advice
-
-Goal: Help users feel less alone, more understood, and gently supported toward healthier thoughts and real-world connections.`;
+Remember: Your goal is to make the user feel truly safe, heard, and gently supported without trying too hard.`;
 
 
 // ====================== FIXED RESPONSES ======================
@@ -131,7 +136,7 @@ router.post("/", authenticate, async (req, res) => {
     const groq = getGroq();
     const chatMessages = [
       { role: "system", content: WELLNESS_SYSTEM_PROMPT },
-      ...messages.slice(-6).map(m => ({
+      ...messages.slice(-10).map(m => ({
         role: m.sender === "bot" ? "assistant" : "user",
         content: m.text
       }))
@@ -140,11 +145,14 @@ router.post("/", authenticate, async (req, res) => {
     const completion = await groq.chat.completions.create({
       model: "llama-3.1-8b-instant",
       messages: chatMessages,
-      temperature: 0.8,
-      max_tokens: 180
+      temperature: 1.0,
+      max_tokens: 220
     });
 
-    let botReplyText = completion.choices[0]?.message?.content?.trim() || "I'm here for you 💜";
+    let botReplyText = completion.choices[0]?.message?.content?.trim() || "hey, you still there?";
+
+    // Strip markdown artifacts the model occasionally adds
+    botReplyText = botReplyText.replace(/\*+/g, '').replace(/^#+\s*/gm, '').trim();
 
     const badPatterns = [
       "i cannot provide", "i cannot fulfill",
@@ -153,7 +161,7 @@ router.post("/", authenticate, async (req, res) => {
     ];
 
     if (badPatterns.some(p => botReplyText.toLowerCase().includes(p))) {
-      botReplyText = "I'm really glad to hear that 💜 You matter to me. Tell me a little more about how you're feeling right now.";
+      botReplyText = "honestly, just tell me more — I want to understand what's going on for you right now.";
     }
 
     const botReply = {
@@ -206,6 +214,17 @@ async function saveAndRespond(messages, botReply, chatId, userId, res) {
         [userId, title, jsonMessages]
       );
     }
+    
+    const userIdNum = parseInt(userId);
+    if (!isNaN(userIdNum)) {
+      await ensureSubscriptionRow(userIdNum);
+      
+      // Increment the subscription limit counter for chatbot messages
+      await db.query(
+        "UPDATE user_subscription SET chatbot_messages_total = chatbot_messages_total + 1 WHERE userId = ?",
+        [userIdNum]
+      );
+    }
 
     res.json({ choices: [{ message: { content: botReply.text } }] });
   } catch (err) {
@@ -221,14 +240,30 @@ async function generateChatTitle(userMessage) {
     const completion = await groq.chat.completions.create({
       model: "llama-3.1-8b-instant",
       messages: [
-        { role: "system", content: "Create a short title (max 5 words) for this message. Reply with only the title, no quotes." },
+        {
+          role: "system",
+          content: `Create a very simple, short chat title (1-3 words maximum) that captures the main topic.
+                    Write it in Title Case (Capitalize Every Word).
+                    Do not use words like "again" or "think" or full sentences. Keep it very simple.
+                    Examples: "Work Stress", "Feeling Lost", "Anxious Thoughts", "Venting".
+                    Reply with only the title. No quotes, no punctuation, no markdown.`
+        },
         { role: "user", content: userMessage }
       ],
-      temperature: 0.3,
-      max_tokens: 20
+      temperature: 0.5,
+      max_tokens: 15
     });
-    let title = completion.choices[0]?.message?.content?.trim().replace(/^["']|["']$/g, '') || userMessage;
-    return title.length > 40 ? title.slice(0, 37) + '...' : title;
+    let title = completion.choices[0]?.message?.content
+      ?.trim()
+      .replace(/^["''*#`]+|["''*#`.!?]+$/g, '')
+      .trim() || userMessage;
+
+    if (title) {
+      // Capitalize every word (Title Case)
+      title = title.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    }
+
+    return title.length > 45 ? title.slice(0, 42) + '...' : title;
   } catch {
     const words = userMessage.split(' ').slice(0, 5).join(' ');
     return words.charAt(0).toUpperCase() + words.slice(1);
