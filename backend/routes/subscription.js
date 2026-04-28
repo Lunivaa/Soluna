@@ -4,6 +4,7 @@ import { authenticate } from "./authRoutes.js";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import { emailTemplate } from "../utils/emailTemplate.js";
+import { ensureSubscriptionRow } from "../utils/subscriptionUtils.js";
 
 const router = express.Router();
 
@@ -24,12 +25,7 @@ function getTransporter() {
 const ESEWA_SECRET = process.env.ESEWA_SECRET_KEY || '8gBm/:&EnhH.1/q';
 const ESEWA_PRODUCT_CODE = process.env.ESEWA_PRODUCT_CODE || 'EPAYTEST';
 
-async function ensureSubscriptionRow(userId) {
-  await db.query(
-    `INSERT IGNORE INTO user_subscription (userId) VALUES (?)`,
-    [userId]
-  );
-}
+
 
 // POST /api/subscription/esewa-sign — generate HMAC-SHA256 signature server-side
 router.post("/esewa-sign", authenticate, async (req, res) => {
@@ -48,36 +44,14 @@ router.get("/usage", authenticate, async (req, res) => {
   try {
     await ensureSubscriptionRow(userId);
 
-    const [chats] = await db.query(
-      `SELECT messages FROM chats WHERE userId = ?`,
-      [userId]
-    );
-    let totalUserMessages = 0;
-    chats.forEach(chat => {
-      try {
-        const msgs = JSON.parse(chat.messages || '[]');
-        totalUserMessages += msgs.filter(m => m.sender === 'user').length;
-      } catch (e) { }
-    });
-
-    const [[journalRow]] = await db.query(
-      `SELECT COUNT(*) AS cnt FROM journal WHERE userId = ?`,
+    const [[sub]] = await db.query(
+      `SELECT is_premium, subscription_expiry, premium_since, journal_created_total, chatbot_messages_total, artwork_created_total, library_usage_count, plan_type 
+       FROM user_subscription WHERE userId = ?`,
       [userId]
     );
 
     const [[moodRow]] = await db.query(
       `SELECT MIN(DATE_FORMAT(date, '%Y-%m-%d')) AS firstDate FROM mood WHERE userId = ?`,
-      [userId]
-    );
-
-    // Library = total self-care sessions started (breathing, meditation, sounds, canvas)
-    const [[libraryRow]] = await db.query(
-      `SELECT COUNT(*) AS cnt FROM selfcare_sessions WHERE userId = ?`,
-      [userId]
-    );
-
-    const [[sub]] = await db.query(
-      `SELECT is_premium, subscription_expiry FROM user_subscription WHERE userId = ?`,
       [userId]
     );
 
@@ -88,12 +62,15 @@ router.get("/usage", authenticate, async (req, res) => {
     }
 
     res.json({
-      chatbotCount: totalUserMessages,
-      journalCount: journalRow.cnt,
-      libraryUsageCount: libraryRow.cnt,
+      chatbotCount: sub.chatbot_messages_total || 0,
+      journalCount: sub.journal_created_total || 0,
+      artworkCount: sub.artwork_created_total || 0,
+      libraryUsageCount: sub.library_usage_count || 0,
       moodTrackingStartDate: moodRow.firstDate || null,
       isPremium,
-      subscriptionExpiry: sub.subscription_expiry || null
+      subscriptionExpiry: sub.subscription_expiry || null,
+      premiumSince: sub.premium_since || null,
+      planType: sub.plan_type || 'monthly'
     });
   } catch (err) {
     console.error("Usage fetch error:", err);
@@ -106,15 +83,20 @@ router.post("/library", authenticate, async (req, res) => {
   const userId = req.userId;
   const { sessionType, itemId } = req.body;
   try {
+    await ensureSubscriptionRow(userId);
     await db.query(
       `INSERT INTO selfcare_sessions (userId, session_type, item_id) VALUES (?, ?, ?)`,
       [userId, sessionType || 'unknown', itemId || null]
     );
-    const [[row]] = await db.query(
-      `SELECT COUNT(*) AS cnt FROM selfcare_sessions WHERE userId = ?`,
+    await db.query(
+      `UPDATE user_subscription SET library_usage_count = library_usage_count + 1 WHERE userId = ?`,
       [userId]
     );
-    res.json({ libraryUsageCount: row.cnt });
+    const [[sub]] = await db.query(
+      `SELECT library_usage_count FROM user_subscription WHERE userId = ?`,
+      [userId]
+    );
+    res.json({ libraryUsageCount: sub.library_usage_count });
   } catch (err) {
     console.error("Library session error:", err);
     res.status(500).json({ error: "Failed to log session" });
@@ -134,14 +116,21 @@ router.post("/activate", authenticate, async (req, res) => {
       expiry.setMonth(expiry.getMonth() + 1);
     }
     await db.query(
-      `UPDATE user_subscription SET is_premium = 1, subscription_expiry = ?, notified_1week = 0, notified_expiry = 0 WHERE userId = ?`,
-      [expiry, userId]
+      `UPDATE user_subscription 
+       SET is_premium = 1, 
+           subscription_expiry = ?, 
+           notified_1week = 0, 
+           notified_expiry = 0,
+           premium_since = IFNULL(premium_since, NOW()),
+           plan_type = ?
+       WHERE userId = ?`,
+      [expiry, plan || 'monthly', userId]
     );
 
     // Send confirmation email
     try {
       const [[user]] = await db.query(
-        `SELECT name, email FROM users WHERE id = ? LIMIT 1`,
+        `SELECT name, email FROM users WHERE id = ? AND deleted_at IS NULL LIMIT 1`,
         [userId]
       );
       if (user?.email) {
