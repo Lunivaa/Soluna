@@ -229,7 +229,7 @@ router.post('/users/:userId/suspend', authenticate, async (req, res) => {
         bodyHtml: `
           <p style="margin:0 0 16px;font-size:16px;color:#1b1b1b;font-weight:600;">Dear ${userName},</p>
           <p style="margin:0 0 20px;font-size:15px;color:#444;line-height:1.7;">
-            We regret to inform you that your <strong>Soluna Wellness</strong> account has been temporarily suspended.
+            We regret to inform you that your <strong>Soluna Wellness</strong> account has been suspended.
           </p>
           <div style="background:#f9f5ff;border-left:4px solid #9565B8;border-radius:0 8px 8px 0;padding:16px 20px;margin:0 0 24px;">
             <p style="margin:0 0 6px;font-size:13px;font-weight:700;color:#9565B8;text-transform:uppercase;letter-spacing:0.5px;">Reason for Suspension</p>
